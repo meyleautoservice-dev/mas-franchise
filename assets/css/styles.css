@@ -245,15 +245,15 @@ table { border-collapse: collapse; width: 100%; }
   width: 100%;
   height: 100%;
   object-fit: cover;
-  opacity: 0.22;
+  opacity: 0.85;
 }
 .hero__media::after {
   content: "";
   position: absolute;
   inset: 0;
-  background: linear-gradient(120deg, var(--c-dark-blue) 20%, rgba(0, 68, 121, 0.55) 70%);
+  background: linear-gradient(180deg, rgba(0, 0, 52, 0.78) 0%, rgba(0, 68, 121, 0.72) 55%, var(--c-blue) 100%);
 }
-.hero__content { position: relative; z-index: 1; max-width: 720px; padding-bottom: 56px; }
+.hero__content { position: relative; z-index: 1; max-width: 720px; margin: 0 auto; padding-bottom: 56px; text-align: center; }
 .hero__title {
   font-family: var(--font-head);
   font-size: clamp(30px, 5vw, 52px);
@@ -261,6 +261,7 @@ table { border-collapse: collapse; width: 100%; }
   line-height: 1.28;
   margin-top: 8px;
 }
+.hero__title-light { font-weight: 500; }
 .hero__lead { margin-top: 20px; font-size: 17px; line-height: 1.7; color: rgba(255, 255, 255, 0.86); }
 .hero__content .btn { margin-top: 32px; }
 
@@ -282,7 +283,8 @@ table { border-collapse: collapse; width: 100%; }
   backdrop-filter: blur(6px);
 }
 .stat-card__label { font-size: 13px; color: rgba(255, 255, 255, 0.7); font-weight: 600; }
-.stat-card__headline { margin-top: 8px; font-size: 22px; font-weight: 800; }
+.stat-card__headline { margin-top: 10px; font-size: clamp(22px, 3vw, 28px); font-weight: 800; line-height: 1.3; }
+.stat-card__headline strong { font-size: 1.35em; }
 .stat-card__note { margin-top: 10px; font-size: 12px; color: var(--c-ink-soft); }
 .section .stat-card__note { color: rgba(255,255,255,0.55); }
 #revenue .stat-card__note { color: var(--c-ink-soft); }
@@ -320,14 +322,16 @@ table { border-collapse: collapse; width: 100%; }
 .bar-chart__axis { font-size: 12px; color: rgba(255, 255, 255, 0.65); font-weight: 600; }
 
 /* ---------- Split (마일레 소개) ---------- */
-.split {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 48px;
-  align-items: center;
+.split__text { max-width: 760px; margin: 0 auto; text-align: center; }
+#meyle .body,
+#meyle .body-lg { margin-left: auto; margin-right: auto; }
+.split__media {
+  margin: 48px 0 0;
 }
-@media (min-width: 900px) { .split { grid-template-columns: 0.85fr 1.15fr; } }
 .split__media img {
+  width: 100%;
+  max-height: 480px;
+  object-fit: cover;
   border-radius: 14px;
   box-shadow: var(--shadow-card);
 }
@@ -455,26 +459,33 @@ table { border-collapse: collapse; width: 100%; }
 .cost-table tbody tr:last-child td, .cost-table tbody tr:last-child th { border-bottom: none; }
 
 /* ---------- 창업 포인트 ---------- */
-.point-list { display: grid; grid-template-columns: 1fr; gap: 20px; }
-@media (min-width: 640px) { .point-list { grid-template-columns: 1fr 1fr; } }
+.point-list { display: flex; flex-direction: column; max-width: 640px; margin: 0 auto; }
 .point-item {
   display: flex;
-  gap: 22px;
-  align-items: flex-start;
-  padding: 32px;
-  background: var(--c-white);
-  border-radius: 14px;
-  box-shadow: var(--shadow-card);
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 48px 12px;
+  border-top: 1px solid #d9dad4;
+}
+.point-item:first-child { border-top: none; }
+.point-item__num {
+  font-family: var(--font-head);
+  font-weight: 900;
+  font-size: 14px;
+  letter-spacing: 0.14em;
+  color: var(--c-coral);
+  margin-bottom: 18px;
 }
 .point-item__icon {
-  width: 68px;
-  height: 68px;
+  width: 76px;
+  height: 76px;
   object-fit: contain;
-  flex-shrink: 0;
+  margin-bottom: 22px;
 }
-.point-item__title { font-size: 19px; font-weight: 800; color: var(--c-blue); }
-.point-item__sub { margin-top: 4px; font-size: 13px; font-weight: 700; color: var(--c-coral); }
-.point-item__desc { margin-top: 6px; font-size: 14px; color: var(--c-ink-soft); line-height: 1.7; }
+.point-item__title { font-size: 20px; font-weight: 800; color: var(--c-blue); }
+.point-item__sub { margin-top: 6px; font-size: 13px; font-weight: 700; color: var(--c-coral); }
+.point-item__desc { margin-top: 10px; font-size: 14px; color: var(--c-ink-soft); line-height: 1.7; max-width: 440px; }
 
 /* ---------- 창업 프로세스 ---------- */
 .process-list {
@@ -533,15 +544,30 @@ table { border-collapse: collapse; width: 100%; }
 .benefit-card {
   background: var(--c-white);
   border-radius: 14px;
-  padding: 28px;
+  overflow: hidden;
+  padding-bottom: 28px;
   box-shadow: var(--shadow-card);
-  border-top: 4px solid var(--c-coral);
 }
-.benefit-card__title { font-size: 13px; font-weight: 800; letter-spacing: 0.06em; text-transform: uppercase; color: var(--c-coral); }
-.benefit-card__lead { margin-top: 10px; font-size: 17px; font-weight: 800; color: var(--c-blue); line-height: 1.5; }
-.benefit-card__list { margin-top: 14px; }
+.benefit-card__media { position: relative; aspect-ratio: 16 / 10; background: var(--c-light-grey); }
+.benefit-card__media img { width: 100%; height: 100%; object-fit: cover; }
+.benefit-card__num {
+  position: absolute;
+  top: 16px;
+  left: 16px;
+  padding: 6px 14px;
+  border-radius: 20px;
+  background: var(--c-coral);
+  color: var(--c-white);
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.25);
+}
+.benefit-card__title { margin: 22px 28px 0; font-size: 13px; font-weight: 800; letter-spacing: 0.06em; text-transform: uppercase; color: var(--c-coral); }
+.benefit-card__lead { margin: 10px 28px 0; font-size: 17px; font-weight: 800; color: var(--c-blue); line-height: 1.5; }
+.benefit-card__list { margin: 14px 28px 0; }
 .benefit-card__list li { font-size: 13.5px; color: var(--c-ink-soft); line-height: 1.8; }
-.benefit-card__note { margin-top: 16px; font-size: 12px; font-weight: 700; color: var(--c-blue); background: var(--c-light-grey); display: inline-block; padding: 4px 10px; border-radius: 20px; }
+.benefit-card__note { margin: 16px 28px 0; font-size: 12px; font-weight: 700; color: var(--c-blue); background: var(--c-light-grey); display: inline-block; padding: 4px 10px; border-radius: 20px; }
 
 .promo-banner {
   background: linear-gradient(120deg, var(--c-blue), var(--c-dark-blue));
@@ -591,6 +617,8 @@ table { border-collapse: collapse; width: 100%; }
 .form-row label { display: block; font-size: 13px; font-weight: 700; margin-bottom: 8px; color: var(--c-ink); }
 .form-row input[type="text"],
 .form-row input[type="tel"],
+.form-row input[type="email"],
+.form-row select,
 .form-row textarea {
   width: 100%;
   padding: 12px 14px;
@@ -598,7 +626,7 @@ table { border-collapse: collapse; width: 100%; }
   border-radius: 8px;
   background: var(--c-soft-white);
 }
-.form-row input:focus, .form-row textarea:focus {
+.form-row input:focus, .form-row select:focus, .form-row textarea:focus {
   outline: none;
   border-color: var(--c-blue);
   box-shadow: 0 0 0 3px rgba(0, 68, 121, 0.12);
@@ -684,18 +712,6 @@ table { border-collapse: collapse; width: 100%; }
 }
 @media (min-width: 640px) { .quick-inquiry__grid { grid-template-columns: 1fr 1fr; } }
 @media (min-width: 1024px) { .quick-inquiry__grid { grid-template-columns: repeat(4, 1fr); } }
-.quick-inquiry__grid .form-row select {
-  width: 100%;
-  padding: 12px 14px;
-  border: 1px solid #dcdcd6;
-  border-radius: 8px;
-  background: var(--c-soft-white);
-}
-.quick-inquiry__grid .form-row select:focus {
-  outline: none;
-  border-color: var(--c-blue);
-  box-shadow: 0 0 0 3px rgba(0, 68, 121, 0.12);
-}
 .quick-inquiry__agree { margin-top: 4px; }
 
 @media (max-width: 639px) {

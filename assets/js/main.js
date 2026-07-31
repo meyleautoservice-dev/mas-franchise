@@ -127,10 +127,11 @@
 
       var name = form.name.value.trim();
       var phone = form.phone.value.trim();
+      var email = form.email.value.trim();
       var agree = form.agree.checked;
 
-      if (!name || !phone || !agree) {
-        formNote.textContent = "성함, 연락처를 입력하고 개인정보 수집·이용에 동의해 주세요.";
+      if (!name || !phone || !email || !agree) {
+        formNote.textContent = "성함, 연락처, 이메일주소를 입력하고 개인정보 수집·이용에 동의해 주세요.";
         formNote.classList.add("is-error");
         return;
       }
@@ -145,12 +146,16 @@
       // TODO: 임시로 mailto 폴백을 사용 중입니다. 폼 수신 백엔드(서버/폼 전송
       // 서비스)가 마련되면 mailto 대신 fetch()로 전송하도록 바꿀 것.
       var RECEIVER_EMAIL = "cs@allesauto.co.kr";
-      var region = form.region.value.trim() || "미입력";
       var message = form.message.value.trim() || "(내용 없음)";
       var bodyLines = [
         "성함: " + name,
+        "연령: " + (form.age.value || "미입력"),
         "연락처: " + phone,
-        "희망 지역: " + region,
+        "이메일주소: " + email,
+        "희망 지역: " + (form.region.value.trim() || "미입력"),
+        "희망시기: " + (form.timing.value || "미입력"),
+        "현재 정비소 운영 여부: " + (form.operating.value || "미입력"),
+        "수입차 정비 경력 유무: " + (form.experience.value || "미입력"),
         "문의 내용: " + message
       ];
       var mailto =
