@@ -164,6 +164,72 @@
     });
   }
 
+  /* ---------- 빠른 창업 문의 (하단 고정 바) ---------- */
+  var quickInquiry = document.getElementById("quickInquiry");
+  var quickToggle = document.getElementById("quickInquiryToggle");
+  var quickForm = document.getElementById("quickInquiryForm");
+  var quickNote = document.getElementById("quickInquiryNote");
+  var quickLabel = quickToggle ? quickToggle.querySelector(".quick-inquiry__toggle-label") : null;
+
+  function setQuickOpen(isOpen) {
+    quickInquiry.setAttribute("data-open", isOpen ? "true" : "false");
+    quickToggle.setAttribute("aria-expanded", isOpen ? "true" : "false");
+    if (quickLabel) quickLabel.textContent = isOpen ? "닫기" : "상담 폼 열기";
+  }
+
+  if (quickInquiry && quickToggle) {
+    quickInquiry.setAttribute("data-open", "false");
+    quickToggle.addEventListener("click", function () {
+      var isOpen = quickToggle.getAttribute("aria-expanded") === "true";
+      setQuickOpen(!isOpen);
+    });
+  }
+
+  if (quickForm) {
+    quickForm.addEventListener("submit", function (e) {
+      e.preventDefault();
+      quickNote.classList.remove("is-error", "is-success");
+
+      var name = quickForm.name.value.trim();
+      var phone = quickForm.phone.value.trim();
+      var email = quickForm.email.value.trim();
+      var agree = quickForm.agree.checked;
+
+      if (!name || !phone || !email || !agree) {
+        quickNote.textContent = "성함, 연락처, 이메일주소를 입력하고 개인정보 수집·이용에 동의해 주세요.";
+        quickNote.classList.add("is-error");
+        return;
+      }
+
+      var phonePattern = /^[0-9\-+ ]{9,14}$/;
+      if (!phonePattern.test(phone)) {
+        quickNote.textContent = "연락처 형식을 확인해 주세요. (예: 010-0000-0000)";
+        quickNote.classList.add("is-error");
+        return;
+      }
+
+      var RECEIVER_EMAIL = "cs@allesauto.co.kr";
+      var bodyLines = [
+        "성함: " + name,
+        "연령: " + (quickForm.age.value || "미입력"),
+        "연락처: " + phone,
+        "이메일주소: " + email,
+        "희망지역: " + (quickForm.region.value.trim() || "미입력"),
+        "희망시기: " + (quickForm.timing.value || "미입력"),
+        "현재 정비소 운영 여부: " + (quickForm.operating.value || "미입력"),
+        "수입차 정비 경력 유무: " + (quickForm.experience.value || "미입력")
+      ];
+      var mailto =
+        "mailto:" + RECEIVER_EMAIL +
+        "?subject=" + encodeURIComponent("[마일레 오토 서비스] 빠른 창업 문의 - " + name) +
+        "&body=" + encodeURIComponent(bodyLines.join("\n"));
+
+      window.location.href = mailto;
+      quickNote.textContent = "메일 앱이 열립니다. 전송 후 상담원이 확인하고 연락드립니다.";
+      quickNote.classList.add("is-success");
+    });
+  }
+
   /* ---------- 푸터 연도 ---------- */
   var footerYear = document.getElementById("footerYear");
   if (footerYear) footerYear.textContent = new Date().getFullYear();

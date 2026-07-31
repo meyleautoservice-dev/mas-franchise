@@ -28,6 +28,7 @@
   --font-body: "Pretendard Variable", "Pretendard", "Apple SD Gothic Neo", "Malgun Gothic", system-ui, sans-serif;
 
   --header-h: 76px;
+  --quick-bar-h: 60px;
   --radius: 4px;
   --shadow-card: 0 12px 32px rgba(0, 20, 45, 0.08);
   --container-w: 1180px;
@@ -39,6 +40,7 @@
 html { scroll-behavior: smooth; }
 body {
   margin: 0;
+  padding-bottom: var(--quick-bar-h);
   font-family: var(--font-body);
   color: var(--c-ink);
   background: var(--c-soft-white);
@@ -118,7 +120,7 @@ table { border-collapse: collapse; width: 100%; }
   gap: 24px;
 }
 .brand { display: flex; align-items: center; }
-.brand__logo { height: 38px; width: auto; display: block; }
+.brand__logo { height: 46px; width: auto; display: block; }
 
 .nav__list {
   display: flex;
@@ -227,7 +229,6 @@ table { border-collapse: collapse; width: 100%; }
 
 .body-lg { font-size: 18px; line-height: 1.7; color: var(--c-ink); margin-top: 18px; }
 .body { font-size: 15px; line-height: 1.85; color: var(--c-ink-soft); margin-top: 16px; max-width: 640px; }
-.tagline { margin-top: 20px; font-weight: 800; font-size: 17px; color: var(--c-blue); }
 
 /* ---------- Hero (시장 성장성) ---------- */
 .hero {
@@ -325,7 +326,7 @@ table { border-collapse: collapse; width: 100%; }
   gap: 48px;
   align-items: center;
 }
-@media (min-width: 900px) { .split { grid-template-columns: 1.1fr 0.9fr; } }
+@media (min-width: 900px) { .split { grid-template-columns: 0.85fr 1.15fr; } }
 .split__media img {
   border-radius: 14px;
   box-shadow: var(--shadow-card);
@@ -339,21 +340,12 @@ table { border-collapse: collapse; width: 100%; }
 }
 @media (max-width: 560px) { .badge-row { grid-template-columns: 1fr; } }
 .badge-row__item { text-align: center; }
-.badge-circle {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 56px;
-  height: 56px;
-  border-radius: 50%;
-  font-weight: 900;
-  font-size: 13px;
-  color: var(--c-white);
+.badge-row__icon {
+  width: 76px;
+  height: 76px;
+  object-fit: contain;
   margin-bottom: 12px;
 }
-.badge-circle--yellow { background: #e8a800; }
-.badge-circle--grey { background: #7c8794; }
-.badge-circle--blue { background: var(--c-blue); }
 .badge-row__title { font-weight: 800; font-size: 14px; color: var(--c-blue); }
 .badge-row__desc { margin-top: 6px; font-size: 12px; color: var(--c-ink-soft); line-height: 1.6; }
 
@@ -368,19 +360,31 @@ table { border-collapse: collapse; width: 100%; }
 .feature-card {
   background: var(--c-white);
   border-radius: 14px;
-  padding: 32px;
+  overflow: hidden;
+  padding-bottom: 26px;
   box-shadow: var(--shadow-card);
 }
+.feature-card__media { position: relative; aspect-ratio: 4 / 3; background: var(--c-light-grey); }
+.feature-card__media img { width: 100%; height: 100%; object-fit: cover; }
 .feature-card__num {
-  display: inline-block;
+  position: absolute;
+  top: 16px;
+  left: 16px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
   font-family: var(--font-head);
-  font-size: 28px;
+  font-size: 15px;
   font-weight: 900;
-  color: var(--c-coral);
-  margin-bottom: 8px;
+  color: var(--c-white);
+  background: var(--c-coral);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.25);
 }
-.feature-card__title { font-size: 18px; font-weight: 800; color: var(--c-blue); }
-.feature-card__desc { margin-top: 12px; font-size: 14px; line-height: 1.8; color: var(--c-ink-soft); }
+.feature-card__title { margin: 22px 28px 0; font-size: 18px; font-weight: 800; color: var(--c-blue); }
+.feature-card__desc { margin: 10px 28px 0; font-size: 15px; line-height: 1.7; color: var(--c-ink-soft); }
 
 .showcase-photo { margin: 0 0 64px; }
 .showcase-photo img { border-radius: 14px; width: 100%; object-fit: cover; max-height: 420px; box-shadow: var(--shadow-card); }
@@ -401,6 +405,16 @@ table { border-collapse: collapse; width: 100%; }
   border-radius: 8px;
   padding: 22px 24px;
   box-shadow: var(--shadow-card);
+}
+.testimonial-card__head { display: flex; align-items: center; gap: 12px; }
+.testimonial-card__photo {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  object-fit: cover;
+  object-position: top center;
+  background: var(--c-light-grey);
+  flex-shrink: 0;
 }
 .testimonial-card__name { font-weight: 800; color: var(--c-blue); font-size: 14px; }
 .testimonial-card__name span { font-weight: 500; color: var(--c-ink-soft); }
@@ -441,27 +455,26 @@ table { border-collapse: collapse; width: 100%; }
 .cost-table tbody tr:last-child td, .cost-table tbody tr:last-child th { border-bottom: none; }
 
 /* ---------- 창업 포인트 ---------- */
-.point-list { display: flex; flex-direction: column; gap: 0; border-top: 1px solid #d9dad4; }
+.point-list { display: grid; grid-template-columns: 1fr; gap: 20px; }
+@media (min-width: 640px) { .point-list { grid-template-columns: 1fr 1fr; } }
 .point-item {
-  display: grid;
-  grid-template-columns: 64px 1fr;
-  gap: 24px;
-  align-items: center;
-  padding: 28px 8px;
-  border-bottom: 1px solid #d9dad4;
+  display: flex;
+  gap: 22px;
+  align-items: flex-start;
+  padding: 32px;
+  background: var(--c-white);
+  border-radius: 14px;
+  box-shadow: var(--shadow-card);
 }
 .point-item__icon {
-  width: 56px;
-  height: 56px;
-  color: var(--c-blue);
+  width: 68px;
+  height: 68px;
+  object-fit: contain;
+  flex-shrink: 0;
 }
-.point-item__icon svg { width: 100%; height: 100%; }
 .point-item__title { font-size: 19px; font-weight: 800; color: var(--c-blue); }
 .point-item__sub { margin-top: 4px; font-size: 13px; font-weight: 700; color: var(--c-coral); }
 .point-item__desc { margin-top: 6px; font-size: 14px; color: var(--c-ink-soft); line-height: 1.7; }
-@media (min-width: 640px) {
-  .point-item { grid-template-columns: 72px 1fr; }
-}
 
 /* ---------- 창업 프로세스 ---------- */
 .process-list {
@@ -600,6 +613,96 @@ table { border-collapse: collapse; width: 100%; }
 .footer-inner { display: flex; flex-direction: column; align-items: center; gap: 8px; text-align: center; }
 .footer-brand__logo { height: 26px; width: auto; }
 .footer-meta, .footer-copy { font-size: 12.5px; }
+
+/* ---------- 빠른 창업 문의 (하단 고정 바) ---------- */
+.quick-inquiry {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 700;
+}
+
+.quick-inquiry__bar {
+  height: var(--quick-bar-h);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 0 20px;
+  background: var(--c-blue);
+  color: var(--c-white);
+  box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.18);
+}
+.quick-inquiry__tel {
+  font-weight: 800;
+  font-size: 14px;
+  white-space: nowrap;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.quick-inquiry__submit { flex-shrink: 0; }
+.quick-inquiry__toggle {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: none;
+  border: none;
+  color: var(--c-white);
+  font-weight: 700;
+  font-size: 14px;
+  cursor: pointer;
+  padding: 8px 4px;
+  white-space: nowrap;
+}
+.quick-inquiry__toggle-icon { transition: transform 0.25s var(--ease); font-size: 12px; }
+.quick-inquiry[data-open="true"] .quick-inquiry__toggle-icon { transform: rotate(180deg); }
+
+.quick-inquiry__panel {
+  background: var(--c-white);
+  color: var(--c-ink);
+  border-radius: 16px 16px 0 0;
+  box-shadow: var(--shadow-card);
+  max-height: 0;
+  opacity: 0;
+  overflow: hidden;
+  transition: max-height 0.35s var(--ease), opacity 0.3s var(--ease), padding 0.35s var(--ease);
+  padding: 0 24px;
+}
+.quick-inquiry[data-open="true"] .quick-inquiry__panel {
+  max-height: min(560px, calc(100vh - var(--header-h) - var(--quick-bar-h)));
+  opacity: 1;
+  overflow-y: auto;
+  padding: 24px 24px 4px;
+}
+
+.quick-inquiry__grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 0 20px;
+}
+@media (min-width: 640px) { .quick-inquiry__grid { grid-template-columns: 1fr 1fr; } }
+@media (min-width: 1024px) { .quick-inquiry__grid { grid-template-columns: repeat(4, 1fr); } }
+.quick-inquiry__grid .form-row select {
+  width: 100%;
+  padding: 12px 14px;
+  border: 1px solid #dcdcd6;
+  border-radius: 8px;
+  background: var(--c-soft-white);
+}
+.quick-inquiry__grid .form-row select:focus {
+  outline: none;
+  border-color: var(--c-blue);
+  box-shadow: 0 0 0 3px rgba(0, 68, 121, 0.12);
+}
+.quick-inquiry__agree { margin-top: 4px; }
+
+@media (max-width: 639px) {
+  .quick-inquiry__toggle-label { display: none; }
+  .quick-inquiry__submit { padding: 10px 14px; font-size: 12px; }
+  .quick-inquiry__tel { font-size: 12.5px; }
+}
 
 /* ---------- Section reveal ---------- */
 .reveal { opacity: 0; transform: translateY(24px); transition: opacity 0.7s var(--ease), transform 0.7s var(--ease); }
