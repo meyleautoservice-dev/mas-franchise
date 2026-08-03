@@ -95,7 +95,7 @@
 
   /* ---------- 섹션 등장 애니메이션 ---------- */
   var revealTargets = document.querySelectorAll(
-    ".feature-card, .point-item, .process-item, .benefit-card, .testimonial-card, .stat-card"
+    ".feature-card, .point-item, .process-item, .benefit-card, .testimonial-card, .stat-card, .statement-band, .split-panel"
   );
   revealTargets.forEach(function (el) { el.classList.add("reveal"); });
 

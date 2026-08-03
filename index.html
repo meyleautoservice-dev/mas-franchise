@@ -42,6 +42,31 @@
   </div>
 </header>
 
+<div class="ticker" aria-hidden="true">
+  <div class="ticker__track">
+    <div class="ticker__group">
+      <span class="ticker__item">MEYLE AUTO SERVICE <span>✦</span></span>
+      <span class="ticker__item">수입차 정비 전문 네트워크 <span>✦</span></span>
+      <span class="ticker__item">MEYLE AUTO SERVICE <span>✦</span></span>
+      <span class="ticker__item">국내 최초 프랜차이즈 <span>✦</span></span>
+      <span class="ticker__item">MEYLE AUTO SERVICE <span>✦</span></span>
+      <span class="ticker__item">수입차 정비 전문 네트워크 <span>✦</span></span>
+      <span class="ticker__item">MEYLE AUTO SERVICE <span>✦</span></span>
+      <span class="ticker__item">국내 최초 프랜차이즈 <span>✦</span></span>
+    </div>
+    <div class="ticker__group">
+      <span class="ticker__item">MEYLE AUTO SERVICE <span>✦</span></span>
+      <span class="ticker__item">수입차 정비 전문 네트워크 <span>✦</span></span>
+      <span class="ticker__item">MEYLE AUTO SERVICE <span>✦</span></span>
+      <span class="ticker__item">국내 최초 프랜차이즈 <span>✦</span></span>
+      <span class="ticker__item">MEYLE AUTO SERVICE <span>✦</span></span>
+      <span class="ticker__item">수입차 정비 전문 네트워크 <span>✦</span></span>
+      <span class="ticker__item">MEYLE AUTO SERVICE <span>✦</span></span>
+      <span class="ticker__item">국내 최초 프랜차이즈 <span>✦</span></span>
+    </div>
+  </div>
+</div>
+
 <main id="main">
 
   <!-- 1. 시장 성장성 -->
@@ -51,7 +76,7 @@
     </div>
     <div class="container hero__content">
       <p class="eyebrow eyebrow--light">확장되는 수입차 시장</p>
-      <h1 class="hero__title"><span class="hero__title-light">국산차 정비의 시대에서,</span><br>수입차 정비의 시대로.</h1>
+      <h1 class="hero__title"><span class="hero__title-light">국산차 정비의 시대에서,</span><br><span class="hl hl--accent">수입차 정비의 시대</span>로.</h1>
       <p class="hero__lead">증가하는 수입차, 부족한 전문 정비 인프라.<br>
       마일레 오토 서비스가 전문성과 신뢰를 바탕으로<br class="only-desktop">
       새로운 정비 시장의 해답을 제시합니다.</p>
@@ -62,7 +87,11 @@
         <div class="stat-card__row">
           <div class="stat-card__text">
             <p class="stat-card__label">서울 기준 자동차 정비소</p>
-            <p class="stat-card__headline">5년 전 대비<br>약 <strong class="accent-turquoise">1,000</strong>여 점 감소</p>
+            <div class="stat-huge">
+              <span class="stat-huge__value">1,000</span>
+              <span class="stat-huge__arrow" aria-hidden="true">↓</span>
+            </div>
+            <p class="stat-card__headline">5년 전 대비 약 1,000여 점 감소</p>
           </div>
           <div class="bar-chart" role="img" aria-label="자동차 정비소 수, 2018년 2700곳에서 2023년 1700곳으로 감소">
             <div class="bar-chart__col">
@@ -81,7 +110,11 @@
         <div class="stat-card__row">
           <div class="stat-card__text">
             <p class="stat-card__label">국산차·수입차 정비 비용 비교 (평균 수리비)</p>
-            <p class="stat-card__headline">국산차 ↔ 수입차<br>약 <strong class="accent-turquoise">2.5배</strong> 차이</p>
+            <div class="stat-huge">
+              <span class="stat-huge__value">2.5</span>
+              <span class="stat-huge__arrow" aria-hidden="true">배</span>
+            </div>
+            <p class="stat-card__headline">국산차 대비 수입차 정비 단가 차이</p>
           </div>
           <div class="bar-chart" role="img" aria-label="평균 수리비, 국산차 114만원, 수입차 282만원, 약 2.5배 차이">
             <div class="bar-chart__col">
@@ -99,6 +132,14 @@
     </div>
   </section>
 
+  <!-- 인터루드 1 -->
+  <section class="statement-band">
+    <div class="container">
+      <p class="statement-band__q">국산차 정비만으로,</p>
+      <p class="statement-band__title">계속 성장할 수 있을까요?<br>이제는 <span class="hl hl--accent">수입차 정비 전문성</span>이 답입니다.</p>
+    </div>
+  </section>
+
   <!-- 2. 마일레 소개 -->
   <section id="meyle" class="section">
     <div class="container split">
@@ -108,7 +149,7 @@
         <p class="body-lg">
           마일레(MEYLE)는 독일에서 시작된 글로벌 자동차 애프터마켓 부품 브랜드로,<br>
           1958년 설립 이후 축적된 기술력과 품질 노하우를 바탕으로
-          전 세계 120여 개국에 프리미엄 자동차 부품을 공급하고 있습니다.
+          전 세계 <span class="hl">120여 개국</span>에 프리미엄 자동차 부품을 공급하고 있습니다.
         </p>
         <p class="body">
           약 24,000여 종의 다양한 부품과 엄격한 품질 테스트를 통해 검증된 성능으로
@@ -149,7 +190,7 @@
         <h2 class="section__title">MEYLE Auto Service</h2>
         <p class="body-lg section-head__lead">
           사업 성공의 동반자, 마일레 오토 서비스<br>
-          대한민국 수입차 정비 시장의 리더로 나아갑니다.
+          대한민국 수입차 정비 시장의 <span class="hl">리더</span>로 나아갑니다.
         </p>
         <p class="body">
           마일레 오토 서비스는 2015년 1호점 오픈 이후<br>
@@ -165,7 +206,7 @@
         <article class="feature-card">
           <div class="feature-card__media">
             <img src="assets/img/feature-training.jpg" alt="수입차 브랜드별 정비 기술 교육 현장" loading="lazy">
-            <span class="feature-card__num">01</span>
+            <span class="tag-ribbon">01</span>
           </div>
           <h3 class="feature-card__title">수입차 정비 전문성 교육</h3>
           <p class="feature-card__desc">현장 중심 브랜드별 기술 교육으로, 수입차 정비 전문가로 성장합니다.</p>
@@ -173,7 +214,7 @@
         <article class="feature-card">
           <div class="feature-card__media">
             <img src="assets/img/feature-parts.jpg" alt="MEYLE 정품 부품 보관 창고" loading="lazy">
-            <span class="feature-card__num">02</span>
+            <span class="tag-ribbon">02</span>
           </div>
           <h3 class="feature-card__title">안정적인 프리미엄 부품 공급</h3>
           <p class="feature-card__desc">24,000여 종 독일 정품 부품을 매일 안정적으로 공급합니다.</p>
@@ -181,7 +222,7 @@
         <article class="feature-card">
           <div class="feature-card__media">
             <img src="assets/img/feature-marketing.jpg" alt="마일레 오토 서비스 브랜드 홈페이지 및 마케팅 콘텐츠" loading="lazy">
-            <span class="feature-card__num">03</span>
+            <span class="tag-ribbon">03</span>
           </div>
           <h3 class="feature-card__title">브랜드 홍보 및 마케팅 지원</h3>
           <p class="feature-card__desc">가맹본부가 직접 뛰는 브랜드 마케팅으로 신규 고객을 유입합니다.</p>
@@ -189,7 +230,7 @@
         <article class="feature-card">
           <div class="feature-card__media">
             <img src="assets/img/feature-interior.jpg" alt="프리미엄 브랜드 아이덴티티가 적용된 정비소 인테리어" loading="lazy">
-            <span class="feature-card__num">04</span>
+            <span class="tag-ribbon">04</span>
           </div>
           <h3 class="feature-card__title">프리미엄 브랜드에 어울리는 인테리어 &amp; 디자인</h3>
           <p class="feature-card__desc">MEYLE Blue 아이덴티티로 완성한 프리미엄 매장 디자인.</p>
@@ -250,6 +291,14 @@
     </div>
   </section>
 
+  <!-- 인터루드 2 -->
+  <section class="statement-band">
+    <div class="container">
+      <p class="statement-band__q">매장을 늘려도, 남는 게 없다면?</p>
+      <p class="statement-band__title"><span class="hl">매출이 아니라 수익</span>으로<br>증명하는 창업을 시작하세요.</p>
+    </div>
+  </section>
+
   <!-- 4. 매출 경쟁력 -->
   <section id="revenue" class="section">
     <div class="container">
@@ -257,9 +306,23 @@
         <p class="eyebrow">합리적인 창업 비용</p>
         <h2 class="section__title">매출 경쟁력</h2>
         <p class="body-lg section-head__lead">
-          국산차 대비 2.5배 높은 수입차 정비 단가와 안정적인 부품 공급 구조를 기반으로,
+          국산차 대비 <span class="hl">2.5배</span> 높은 수입차 정비 단가와 안정적인 부품 공급 구조를 기반으로,
           예측 가능한 비용으로 창업할 수 있습니다.
         </p>
+      </div>
+
+      <div class="split-panel">
+        <div class="split-panel__col split-panel__col--dark">
+          <span class="tag-ribbon">국산차</span>
+          <p class="split-panel__label">평균 수리비</p>
+          <p class="split-panel__value">1,140,000원</p>
+        </div>
+        <div class="split-panel__col split-panel__col--light">
+          <span class="tag-ribbon">수입차</span>
+          <p class="split-panel__label">평균 수리비</p>
+          <p class="split-panel__value">2,820,000원</p>
+          <p class="split-panel__desc">국산차 대비 약 2.5배 높은 정비 단가</p>
+        </div>
       </div>
 
       <div class="notice-banner">
@@ -410,7 +473,7 @@
         <article class="benefit-card">
           <div class="benefit-card__media">
             <img src="assets/img/benefit-training-original.jpg" alt="가맹점 운영 교육 현장" loading="lazy">
-            <span class="benefit-card__num">혜택 1</span>
+            <span class="tag-ribbon">혜택 1</span>
           </div>
           <h3 class="benefit-card__title">교육</h3>
           <p class="benefit-card__lead">가맹점 운영을 위한 기본 교육 시행</p>
@@ -421,8 +484,8 @@
         </article>
         <article class="benefit-card">
           <div class="benefit-card__media">
-            <img src="assets/img/benefit-goods.jpg" alt="가맹점 운영 및 판촉 물품" loading="lazy">
-            <span class="benefit-card__num">혜택 2</span>
+            <img src="assets/img/benefit-goods-promo.png" alt="마일레 프로모션 제품 모음 - 판촉 물품 세트" loading="lazy">
+            <span class="tag-ribbon">혜택 2</span>
           </div>
           <h3 class="benefit-card__title">물품</h3>
           <p class="benefit-card__lead">가맹점 운영 및 판촉 물품 지원</p>
@@ -434,7 +497,7 @@
         <article class="benefit-card">
           <div class="benefit-card__media">
             <img src="assets/img/benefit-promo.jpg" alt="SNS 및 온라인 브랜드 홍보" loading="lazy">
-            <span class="benefit-card__num">혜택 3</span>
+            <span class="tag-ribbon">혜택 3</span>
           </div>
           <h3 class="benefit-card__title">홍보</h3>
           <p class="benefit-card__lead">인플루언서 활용 SNS 홍보 (3회)</p>
@@ -447,7 +510,7 @@
 
       <div class="promo-banner">
         <span class="promo-banner__num">혜택 4</span>
-        <p class="promo-banner__title">인테리어 지원 프로모션</p>
+        <p class="promo-banner__title"><span class="hl hl--accent hl--shine">인테리어 지원</span> 프로모션</p>
         <p class="promo-banner__desc">창업 상담을 통해 인테리어 지원 프로모션을 진행합니다. (상담 후 선발 방식)</p>
         <a class="btn btn--accent" href="#contact">창업 문의</a>
       </div>
