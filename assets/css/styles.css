@@ -28,6 +28,7 @@
   --font-body: "Pretendard Variable", "Pretendard", "Apple SD Gothic Neo", "Malgun Gothic", system-ui, sans-serif;
 
   --header-h: 76px;
+  --ticker-h: 44px;
   --quick-bar-h: 60px;
   --radius: 4px;
   --shadow-card: 0 12px 32px rgba(0, 20, 45, 0.08);
@@ -199,7 +200,7 @@ table { border-collapse: collapse; width: 100%; }
 }
 
 /* ---------- Sections ---------- */
-.section { position: relative; padding: 96px 0; overflow: hidden; scroll-margin-top: var(--header-h); }
+.section { position: relative; padding: 96px 0; overflow: hidden; scroll-margin-top: calc(var(--header-h) + var(--ticker-h)); }
 .section--alt { background: var(--c-light-grey); }
 .section--dark { background: var(--c-dark-blue); color: var(--c-white); }
 
@@ -246,6 +247,9 @@ table { border-collapse: collapse; width: 100%; }
 
 /* ---------- 스크롤링 워드마크 티커 ---------- */
 .ticker {
+  position: sticky;
+  top: var(--header-h);
+  z-index: 499;
   overflow: hidden;
   background: var(--c-dark-blue);
   border-bottom: 1px solid rgba(255, 255, 255, 0.08);
