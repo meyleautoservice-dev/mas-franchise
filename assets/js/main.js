@@ -93,11 +93,33 @@
     bars.forEach(function (bar) { bar.classList.add("in-view"); });
   }
 
+  /* ---------- 하이라이트 숫자 카운트업 (마일레 소개 120개국·24,000종) ---------- */
+  var countTargets = Array.prototype.slice.call(document.querySelectorAll(".hl-count"));
+  if ("IntersectionObserver" in window && countTargets.length) {
+    var countObserver = new IntersectionObserver(
+      function (entries, observer) {
+        entries.forEach(function (entry) {
+          if (!entry.isIntersecting) return;
+          var el = entry.target;
+          var target = parseInt(el.getAttribute("data-count-target"), 10);
+          var suffix = el.getAttribute("data-count-suffix") || "";
+          if (!isNaN(target)) animateCount(el, target, suffix);
+          observer.unobserve(el);
+        });
+      },
+      { threshold: 0.6 }
+    );
+    countTargets.forEach(function (el) { countObserver.observe(el); });
+  }
+
   /* ---------- 섹션 등장 애니메이션 ---------- */
   var revealTargets = document.querySelectorAll(
-    ".feature-card, .point-item, .process-item, .benefit-card, .testimonial-card, .stat-card, .statement-band, .split-panel"
+    ".point-item, .benefit-card, .stat-card, .statement-band, .split-panel, .showcase-photo"
   );
   revealTargets.forEach(function (el) { el.classList.add("reveal"); });
+
+  var revealImgTargets = document.querySelectorAll(".reveal-img");
+  var allReveal = Array.prototype.slice.call(revealTargets).concat(Array.prototype.slice.call(revealImgTargets));
 
   if ("IntersectionObserver" in window) {
     var revealObserver = new IntersectionObserver(
@@ -111,9 +133,76 @@
       },
       { threshold: 0.15 }
     );
-    revealTargets.forEach(function (el) { revealObserver.observe(el); });
+    allReveal.forEach(function (el) { revealObserver.observe(el); });
   } else {
-    revealTargets.forEach(function (el) { el.classList.add("is-visible"); });
+    allReveal.forEach(function (el) { el.classList.add("is-visible"); });
+  }
+
+  /* ---------- 그룹 순차 등장(카드가 순서대로 하나씩 노출) ---------- */
+  var revealGroups = document.querySelectorAll(".reveal-group");
+  if ("IntersectionObserver" in window && revealGroups.length) {
+    var groupObserver = new IntersectionObserver(
+      function (entries, observer) {
+        entries.forEach(function (entry) {
+          if (entry.isIntersecting) {
+            entry.target.classList.add("is-visible");
+            observer.unobserve(entry.target);
+          }
+        });
+      },
+      { threshold: 0.15 }
+    );
+    revealGroups.forEach(function (el) { groupObserver.observe(el); });
+  } else {
+    revealGroups.forEach(function (el) { el.classList.add("is-visible"); });
+  }
+
+  /* ---------- 텍스트 라인 순차 등장(스태거) + 하이라이트 박스 bounce-in ---------- */
+  function activateHlPop(container) {
+    var boxes = container.querySelectorAll(".hl");
+    boxes.forEach(function (box) {
+      box.classList.add("hl-pop");
+      if (box.classList.contains("hl--shine")) {
+        box.addEventListener("animationend", function handler(e) {
+          if (e.animationName === "hl-bounce-in") {
+            box.classList.add("hl-pulsing");
+            box.removeEventListener("animationend", handler);
+          }
+        });
+      }
+    });
+  }
+
+  var lineGroups = Array.prototype.slice.call(document.querySelectorAll(".reveal-lines"));
+  var loadLineGroups = lineGroups.filter(function (el) { return el.hasAttribute("data-reveal-load"); });
+  var scrollLineGroups = lineGroups.filter(function (el) { return !el.hasAttribute("data-reveal-load"); });
+
+  window.requestAnimationFrame(function () {
+    loadLineGroups.forEach(function (el) {
+      el.classList.add("is-visible");
+      activateHlPop(el);
+    });
+  });
+
+  if ("IntersectionObserver" in window && scrollLineGroups.length) {
+    var lineObserver = new IntersectionObserver(
+      function (entries, observer) {
+        entries.forEach(function (entry) {
+          if (entry.isIntersecting) {
+            entry.target.classList.add("is-visible");
+            activateHlPop(entry.target);
+            observer.unobserve(entry.target);
+          }
+        });
+      },
+      { threshold: 0.4 }
+    );
+    scrollLineGroups.forEach(function (el) { lineObserver.observe(el); });
+  } else {
+    scrollLineGroups.forEach(function (el) {
+      el.classList.add("is-visible");
+      activateHlPop(el);
+    });
   }
 
   /* ---------- 창업 문의 폼 ---------- */

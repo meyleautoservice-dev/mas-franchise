@@ -6,6 +6,7 @@
 <title>마일레 오토 서비스 가맹 창업 | MEYLE Auto Service</title>
 <meta name="description" content="국내 최초 수입차 정비 전문 네트워크, 마일레 오토 서비스 가맹 창업 안내">
 <link rel="stylesheet" href="assets/css/styles.css">
+<noscript><style>.reveal, .reveal-img, .reveal-line, .reveal-lines .hl, .reveal-group > * { opacity: 1 !important; transform: none !important; }</style></noscript>
 </head>
 <body>
 
@@ -74,10 +75,13 @@
     <div class="hero__media" aria-hidden="true">
       <img src="assets/img/market-mechanic.jpg" alt="" loading="eager">
     </div>
-    <div class="container hero__content">
-      <p class="eyebrow eyebrow--light">확장되는 수입차 시장</p>
-      <h1 class="hero__title"><span class="hero__title-light">국산차 정비의 시대에서,</span><br><span class="hl hl--accent">수입차 정비의 시대</span>로.</h1>
-      <p class="hero__lead">증가하는 수입차, 부족한 전문 정비 인프라.<br>
+    <div class="container hero__content reveal-lines" data-reveal-load>
+      <p class="eyebrow eyebrow--light reveal-line" style="--i:0">확장되는 수입차 시장</p>
+      <h1 class="hero__title">
+        <span class="reveal-line hero__title-light" style="--i:1;display:inline-block">국산차 정비의 시대에서,</span><br>
+        <span class="reveal-line" style="--i:2;display:inline-block"><span class="hl hl--accent">수입차 정비의 시대</span>로.</span>
+      </h1>
+      <p class="hero__lead reveal-line" style="--i:3">증가하는 수입차, 부족한 전문 정비 인프라.<br>
       마일레 오토 서비스가 전문성과 신뢰를 바탕으로<br class="only-desktop">
       새로운 정비 시장의 해답을 제시합니다.</p>
     </div>
@@ -134,9 +138,12 @@
 
   <!-- 인터루드 1 -->
   <section class="statement-band">
-    <div class="container">
-      <p class="statement-band__q">해마다 급증하는 수입차 정비 시장,</p>
-      <p class="statement-band__title">국내 최초 수입차 정비 전문 브랜드<br><span class="hl hl--accent">마일레 오토 서비스</span>가 답입니다.</p>
+    <div class="container reveal-lines">
+      <p class="statement-band__q reveal-line" style="--i:0">해마다 급증하는 수입차 정비 시장,</p>
+      <p class="statement-band__title">
+        <span class="reveal-line" style="--i:1;display:inline-block">국내 최초 수입차 정비 전문 브랜드</span><br>
+        <span class="reveal-line" style="--i:2;display:inline-block"><span class="hl hl--accent">마일레 오토 서비스</span>가 답입니다.</span>
+      </p>
     </div>
   </section>
 
@@ -144,19 +151,11 @@
   <section id="meyle" class="section">
     <div class="container split">
       <div class="split__text">
-        <p class="eyebrow">애프터마켓 자동차 부품 브랜드</p>
-        <h2 class="section__title">MEYLE<br>a strong brand!</h2>
+        <p class="eyebrow">1958년 독일에서 시작된 프리미엄 자동차 부품 브랜드, 마일레(MEYLE)</p>
+        <h2 class="section__title">MEYLE</h2>
         <p class="body-lg">
-          마일레(MEYLE)는 독일에서 시작된 글로벌 자동차 애프터마켓 부품 브랜드로,<br>
-          1958년 설립 이후 축적된 기술력과 품질 노하우를 바탕으로
-          전 세계 <span class="hl">120여 개국</span>에 프리미엄 자동차 부품을 공급하고 있습니다.
-        </p>
-        <p class="body">
-          약 24,000여 종의 다양한 부품과 엄격한 품질 테스트를 통해 검증된 성능으로
-          전 세계 수입차 정비 시장에서<br>
-          높은 신뢰를 구축하고 있으며,
-          지속적인 연구개발과 품질 관리를 통해 고객과 정비 현장이 모두 신뢰할 수 있는
-          브랜드 가치를 만들어가고 있습니다.
+          전 세계 <span class="hl hl-count" data-count-target="120" data-count-suffix="여 개국">120여 개국</span>, <span class="hl hl-count" data-count-target="24000" data-count-suffix="여 종">24,000여 종</span>의 부품으로 입증된 기술력<br>
+          드라이버와 전문가 모두가 신뢰하는 프리미엄 수입차 부품, 마일레(MEYLE)가 만들어갑니다.
         </p>
         <ul class="badge-row">
           <li class="badge-row__item">
@@ -177,8 +176,36 @@
         </ul>
       </div>
       <figure class="split__media">
-        <img src="assets/img/meyle-headquarters.jpg" alt="독일 마일레(MEYLE) 본사 전경" loading="lazy">
+        <img class="reveal-img" src="assets/img/meyle-headquarters.jpg" alt="독일 마일레(MEYLE) 본사 전경" loading="lazy">
       </figure>
+    </div>
+  </section>
+
+  <!-- 이미지 롤링: MEYLE 부품 카테고리 -->
+  <section class="rolling-gallery" aria-hidden="true">
+    <div class="rolling-gallery__track">
+      <div class="rolling-gallery__group">
+        <img src="assets/img/rolling/rolling-brakes.jpg" alt="" loading="lazy">
+        <img src="assets/img/rolling/rolling-damping.jpg" alt="" loading="lazy">
+        <img src="assets/img/rolling/rolling-drivetrain.jpg" alt="" loading="lazy">
+        <img src="assets/img/rolling/rolling-electronics.jpg" alt="" loading="lazy">
+        <img src="assets/img/rolling/rolling-filter.jpg" alt="" loading="lazy">
+        <img src="assets/img/rolling/rolling-steering.jpg" alt="" loading="lazy">
+        <img src="assets/img/rolling/rolling-thermal.jpg" alt="" loading="lazy">
+        <img src="assets/img/rolling/rolling-brakes-alt.jpg" alt="" loading="lazy">
+        <img src="assets/img/rolling/rolling-damping-alt.jpg" alt="" loading="lazy">
+      </div>
+      <div class="rolling-gallery__group">
+        <img src="assets/img/rolling/rolling-brakes.jpg" alt="" loading="lazy">
+        <img src="assets/img/rolling/rolling-damping.jpg" alt="" loading="lazy">
+        <img src="assets/img/rolling/rolling-drivetrain.jpg" alt="" loading="lazy">
+        <img src="assets/img/rolling/rolling-electronics.jpg" alt="" loading="lazy">
+        <img src="assets/img/rolling/rolling-filter.jpg" alt="" loading="lazy">
+        <img src="assets/img/rolling/rolling-steering.jpg" alt="" loading="lazy">
+        <img src="assets/img/rolling/rolling-thermal.jpg" alt="" loading="lazy">
+        <img src="assets/img/rolling/rolling-brakes-alt.jpg" alt="" loading="lazy">
+        <img src="assets/img/rolling/rolling-damping-alt.jpg" alt="" loading="lazy">
+      </div>
     </div>
   </section>
 
@@ -188,21 +215,17 @@
       <div class="section-head">
         <p class="eyebrow">국내 최초 수입차 정비 전문 네트워크</p>
         <h2 class="section__title">MEYLE Auto Service</h2>
-        <p class="body-lg section-head__lead">
-          사업 성공의 동반자, 마일레 오토 서비스<br>
-          대한민국 수입차 정비 시장의 <span class="hl">리더</span>로 나아갑니다.
+        <p class="body-lg section-head__lead reveal-lines">
+          <span class="reveal-line" style="--i:0;display:inline-block">사업 성공의 동반자, 마일레 오토 서비스</span><br>
+          <span class="reveal-line" style="--i:1;display:inline-block">대한민국 수입차 정비를 선도하는 <span class="hl hl--bold">프리미엄 네트워크</span></span>
         </p>
         <p class="body">
-          마일레 오토 서비스는 2015년 1호점 오픈 이후<br>
-          국내 최초 수입차 정비 전문 네트워크 브랜드로 성장해온 프리미엄 수입차 정비 서비스 브랜드입니다.<br>
-          독일 글로벌 애프터마켓 브랜드 MEYLE의 기술력과<br>
-          약 24,000여 종 부품 공급 시스템을 기반으로 수입차 정비에 필요한 전문 솔루션을 제공합니다.<br>
-          체계적인 운영 시스템과 전문 기술 교육, 검증된 부품 및 표준화된 정비 프로세스를 통해<br>
-          전국 어디서나 높은 수준의 정비 서비스를 제공합니다.
+          독일 MEYLE의 기술력과 24,000여 종의 부품 공급 시스템, 체계적인 운영 시스템을 기반으로<br>
+          성공적인 정비 사업과 최고의 서비스를 제공합니다.
         </p>
       </div>
 
-      <div class="feature-grid">
+      <div class="feature-grid reveal-group">
         <article class="feature-card">
           <div class="feature-card__media">
             <img src="assets/img/feature-training.jpg" alt="수입차 브랜드별 정비 기술 교육 현장" loading="lazy">
@@ -245,7 +268,7 @@
       <div class="testimonial-block">
         <p class="eyebrow">마일레 오토 서비스를 선택한 이유</p>
         <h3 class="section__title section__title--sm">실제 점주님들의 한마디!</h3>
-        <div class="testimonial-grid">
+        <div class="testimonial-grid reveal-group">
           <blockquote class="testimonial-card">
             <div class="testimonial-card__head">
               <img class="testimonial-card__photo" src="assets/img/owner-jeongsangil.png" alt="김*중 점주">
@@ -293,9 +316,12 @@
 
   <!-- 인터루드 2 -->
   <section class="statement-band">
-    <div class="container">
-      <p class="statement-band__q">매장을 늘려도, 남는 게 없다면?</p>
-      <p class="statement-band__title"><span class="hl">매출이 아니라 수익</span>으로<br>증명하는 창업을 시작하세요.</p>
+    <div class="container reveal-lines">
+      <p class="statement-band__q reveal-line" style="--i:0">매장을 늘려도, 남는 게 없다면?</p>
+      <p class="statement-band__title">
+        <span class="reveal-line" style="--i:1;display:inline-block"><span class="hl">매출이 아니라 수익</span>으로</span><br>
+        <span class="reveal-line" style="--i:2;display:inline-block">증명하는 창업을 시작하세요.</span>
+      </p>
     </div>
   </section>
 
@@ -431,7 +457,7 @@
         <h2 class="section__title">창업 프로세스</h2>
       </div>
 
-      <ol class="process-list">
+      <ol class="process-list reveal-group">
         <li class="process-item">
           <span class="process-item__num">1</span>
           <h3 class="process-item__title">가맹 상담</h3>
@@ -472,7 +498,7 @@
       <div class="benefit-grid">
         <article class="benefit-card">
           <div class="benefit-card__media">
-            <img src="assets/img/benefit-training-original.jpg" alt="가맹점 운영 교육 현장" loading="lazy">
+            <img class="reveal-img" src="assets/img/benefit-training-original.jpg" alt="가맹점 운영 교육 현장" loading="lazy">
             <span class="tag-ribbon">혜택 1</span>
           </div>
           <h3 class="benefit-card__title">교육</h3>
@@ -484,7 +510,7 @@
         </article>
         <article class="benefit-card">
           <div class="benefit-card__media">
-            <img src="assets/img/benefit-goods-promo.png" alt="마일레 프로모션 제품 모음 - 판촉 물품 세트" loading="lazy">
+            <img class="reveal-img" src="assets/img/benefit-goods-promo.png" alt="마일레 프로모션 제품 모음 - 판촉 물품 세트" loading="lazy">
             <span class="tag-ribbon">혜택 2</span>
           </div>
           <h3 class="benefit-card__title">물품</h3>
@@ -496,7 +522,7 @@
         </article>
         <article class="benefit-card">
           <div class="benefit-card__media">
-            <img src="assets/img/benefit-promo.jpg" alt="SNS 및 온라인 브랜드 홍보" loading="lazy">
+            <img class="reveal-img" src="assets/img/benefit-promo.jpg" alt="SNS 및 온라인 브랜드 홍보" loading="lazy">
             <span class="tag-ribbon">혜택 3</span>
           </div>
           <h3 class="benefit-card__title">홍보</h3>
@@ -510,7 +536,7 @@
 
       <div class="promo-banner">
         <span class="promo-banner__num">혜택 4</span>
-        <p class="promo-banner__title"><span class="hl hl--accent hl--shine">인테리어 지원</span> 프로모션</p>
+        <p class="promo-banner__title reveal-lines"><span class="hl hl--accent hl--shine">인테리어 지원</span> 프로모션</p>
         <p class="promo-banner__desc">창업 상담을 통해 인테리어 지원 프로모션을 진행합니다. (상담 후 선발 방식)</p>
         <a class="btn btn--accent" href="#contact">창업 문의</a>
       </div>

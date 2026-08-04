@@ -209,12 +209,12 @@ table { border-collapse: collapse; width: 100%; }
 
 .eyebrow {
   display: inline-block;
-  font-size: 13px;
+  font-size: 20px;
   font-weight: 800;
-  letter-spacing: 0.08em;
+  letter-spacing: 0.06em;
   text-transform: uppercase;
   color: var(--c-coral);
-  margin-bottom: 12px;
+  margin-bottom: 16px;
 }
 .eyebrow--light { color: var(--c-turquoise); }
 
@@ -242,8 +242,24 @@ table { border-collapse: collapse; width: 100%; }
   transform: rotate(-1deg);
   white-space: nowrap;
 }
-.hl--accent { background: var(--c-turquoise); color: var(--c-dark-blue); }
 .hl--blue { background: var(--c-blue); color: var(--c-white); }
+.hl--bold { font-weight: 900; }
+.hl-count { font-variant-numeric: tabular-nums; }
+
+.hl--accent { background: var(--c-turquoise); color: var(--c-dark-blue); }
+
+/* 하이라이트 박스 등장 모션 (멕시카나 '1위 치킨 프랜차이즈!' 스타일 bounce-in) */
+@keyframes hl-bounce-in {
+  0% { opacity: 0; transform: translateY(-60px) rotate(-1deg) scale(0.7); }
+  55% { opacity: 1; transform: translateY(10px) rotate(-1deg) scale(1.08); }
+  75% { transform: translateY(-4px) rotate(-1deg) scale(0.97); }
+  100% { opacity: 1; transform: translateY(0) rotate(-1deg) scale(1); }
+}
+.reveal-lines .hl:not(.hl-pop) { opacity: 0; }
+.hl.hl-pop {
+  animation: hl-bounce-in 0.85s cubic-bezier(0.17, 0.89, 0.32, 1.28) both;
+  animation-delay: 0.2s;
+}
 
 /* ---------- 스크롤링 워드마크 티커 ---------- */
 .ticker {
@@ -475,6 +491,8 @@ table { border-collapse: collapse; width: 100%; }
 #meyle .body-lg { margin-left: auto; margin-right: auto; }
 .split__media {
   margin: 48px 0 0;
+  overflow: hidden;
+  border-radius: 14px;
 }
 .split__media img {
   width: 100%;
@@ -500,6 +518,45 @@ table { border-collapse: collapse; width: 100%; }
 }
 .badge-row__title { font-weight: 800; font-size: 14px; color: var(--c-blue); }
 .badge-row__desc { margin-top: 6px; font-size: 12px; color: var(--c-ink-soft); line-height: 1.6; }
+
+/* ---------- 이미지 롤링 (마일레 부품 카테고리) ---------- */
+.rolling-gallery {
+  overflow: hidden;
+  padding: 44px 0;
+  background: var(--c-dark-blue);
+}
+.rolling-gallery__track {
+  display: flex;
+  width: max-content;
+  animation: rolling-gallery-scroll 72s linear infinite;
+}
+.rolling-gallery:hover .rolling-gallery__track { animation-play-state: paused; }
+.rolling-gallery__group {
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+  gap: 20px;
+  padding-right: 20px;
+}
+.rolling-gallery__group img {
+  height: 420px;
+  width: auto;
+  max-width: none;
+  object-fit: cover;
+  border-radius: 12px;
+  box-shadow: var(--shadow-card);
+}
+@media (max-width: 768px) {
+  .rolling-gallery__group img { height: 260px; }
+  .rolling-gallery__track { animation-duration: 52s; }
+}
+@keyframes rolling-gallery-scroll {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .rolling-gallery__track { animation: none; }
+}
 
 /* ---------- Feature grid (오토서비스 소개) ---------- */
 .feature-grid {
@@ -749,8 +806,8 @@ table { border-collapse: collapse; width: 100%; }
 .promo-banner__desc { margin-top: 12px; font-size: 15px; line-height: 1.7; color: rgba(255, 255, 255, 0.85); }
 .promo-banner .btn { margin-top: 24px; }
 
-/* 인테리어 지원 텍스트 박스 펄스(NEW OPEN 뱃지 스타일) 모션 */
-.promo-banner .hl--shine {
+/* 인테리어 지원 텍스트 박스: bounce-in 등장 후 펄스(NEW OPEN 뱃지 스타일) 모션으로 전환 */
+.promo-banner .hl--shine.hl-pulsing {
   animation: promo-highlight-pulse 1.4s ease-in-out infinite;
 }
 @keyframes promo-highlight-pulse {
@@ -758,7 +815,7 @@ table { border-collapse: collapse; width: 100%; }
   50% { transform: rotate(-1deg) scale(1.08); box-shadow: rgba(1, 245, 191, 0) 0 0 0 6px; }
 }
 @media (prefers-reduced-motion: reduce) {
-  .promo-banner .hl--shine { animation: none; }
+  .promo-banner .hl--shine.hl-pulsing { animation: none; }
 }
 
 /* ---------- 창업 문의 ---------- */
@@ -910,6 +967,45 @@ table { border-collapse: collapse; width: 100%; }
 /* ---------- Section reveal ---------- */
 .reveal { opacity: 0; transform: translateY(24px); transition: opacity 0.7s var(--ease), transform 0.7s var(--ease); }
 .reveal.is-visible { opacity: 1; transform: translateY(0); }
+
+/* 이미지 스케일 리빌 (Ken Burns 느낌의 확대→정상 크기 정착) */
+.reveal-img {
+  opacity: 0;
+  transform: translateY(16px) scale(1.06);
+  transition: opacity 0.8s var(--ease), transform 0.9s var(--ease);
+}
+.reveal-img.is-visible { opacity: 1; transform: translateY(0) scale(1); }
+
+/* 텍스트 라인 순차 등장(스태거). .reveal-lines가 관측 대상, 자식 .reveal-line이 순서대로 등장 */
+.reveal-line {
+  opacity: 0;
+  transform: translateY(14px);
+  transition: opacity 0.6s var(--ease), transform 0.6s var(--ease);
+  transition-delay: calc(var(--i, 0) * 0.1s);
+}
+.reveal-lines.is-visible .reveal-line { opacity: 1; transform: translateY(0); }
+
+/* 그룹 순차 등장(스태거). 부모 .reveal-group이 관측 대상, 직계 자식이 순서대로 하나씩 등장 */
+.reveal-group > * {
+  opacity: 0;
+  transform: translateY(24px);
+  transition: opacity 0.6s var(--ease), transform 0.6s var(--ease);
+}
+.reveal-group > *:nth-child(1) { transition-delay: 0s; }
+.reveal-group > *:nth-child(2) { transition-delay: 0.12s; }
+.reveal-group > *:nth-child(3) { transition-delay: 0.24s; }
+.reveal-group > *:nth-child(4) { transition-delay: 0.36s; }
+.reveal-group > *:nth-child(5) { transition-delay: 0.48s; }
+.reveal-group.is-visible > * { opacity: 1; transform: translateY(0); }
+
+@media (prefers-reduced-motion: reduce) {
+  .reveal, .reveal-img, .reveal-line, .reveal-group > * {
+    transition: none;
+    opacity: 1;
+    transform: none;
+  }
+  .hl.hl-pop { animation: none; }
+}
 
 @media (max-width: 600px) {
   .section { padding: 64px 0; }
