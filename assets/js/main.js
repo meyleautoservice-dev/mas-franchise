@@ -59,7 +59,7 @@
   var bars = Array.prototype.slice.call(document.querySelectorAll(".bar-chart__bar"));
 
   function animateCount(el, target, suffix) {
-    var duration = 1100;
+    var duration = 1500;
     var start = null;
     function step(ts) {
       if (start === null) start = ts;
