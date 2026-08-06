@@ -61,7 +61,9 @@
   function animateCount(el, target, suffix) {
     var duration = 1500;
     var start = null;
+    var token = (el._countToken = (el._countToken || 0) + 1);
     function step(ts) {
+      if (el._countToken !== token) return;
       if (start === null) start = ts;
       var progress = Math.min((ts - start) / duration, 1);
       var value = Math.floor(target * progress);
@@ -72,18 +74,26 @@
     requestAnimationFrame(step);
   }
 
+  function resetCount(el, suffix) {
+    el._countToken = (el._countToken || 0) + 1;
+    el.textContent = "0" + (suffix || "");
+  }
+
   if ("IntersectionObserver" in window && bars.length) {
     var barObserver = new IntersectionObserver(
-      function (entries, observer) {
+      function (entries) {
         entries.forEach(function (entry) {
-          if (!entry.isIntersecting) return;
           var bar = entry.target;
-          bar.classList.add("in-view");
           var target = parseInt(bar.getAttribute("data-target"), 10);
           var suffix = bar.getAttribute("data-suffix") || "";
           var valueEl = bar.querySelector(".bar-chart__value");
-          if (valueEl && !isNaN(target)) animateCount(valueEl, target, suffix);
-          observer.unobserve(bar);
+          if (entry.isIntersecting) {
+            bar.classList.add("in-view");
+            if (valueEl && !isNaN(target)) animateCount(valueEl, target, suffix);
+          } else {
+            bar.classList.remove("in-view");
+            if (valueEl) resetCount(valueEl, suffix);
+          }
         });
       },
       { threshold: 0.4 }
@@ -97,14 +107,16 @@
   var countTargets = Array.prototype.slice.call(document.querySelectorAll(".hl-count"));
   if ("IntersectionObserver" in window && countTargets.length) {
     var countObserver = new IntersectionObserver(
-      function (entries, observer) {
+      function (entries) {
         entries.forEach(function (entry) {
-          if (!entry.isIntersecting) return;
           var el = entry.target;
           var target = parseInt(el.getAttribute("data-count-target"), 10);
           var suffix = el.getAttribute("data-count-suffix") || "";
-          if (!isNaN(target)) animateCount(el, target, suffix);
-          observer.unobserve(el);
+          if (entry.isIntersecting) {
+            if (!isNaN(target)) animateCount(el, target, suffix);
+          } else {
+            resetCount(el, suffix);
+          }
         });
       },
       { threshold: 0.6 }
@@ -114,7 +126,7 @@
 
   /* ---------- 섹션 등장 애니메이션 ---------- */
   var revealTargets = document.querySelectorAll(
-    ".point-item, .benefit-card, .stat-card, .statement-band, .split-panel, .showcase-photo"
+    ".benefit-card, .stat-card, .statement-band, .split-panel, .showcase-photo"
   );
   revealTargets.forEach(function (el) { el.classList.add("reveal"); });
 
@@ -123,12 +135,9 @@
 
   if ("IntersectionObserver" in window) {
     var revealObserver = new IntersectionObserver(
-      function (entries, observer) {
+      function (entries) {
         entries.forEach(function (entry) {
-          if (entry.isIntersecting) {
-            entry.target.classList.add("is-visible");
-            observer.unobserve(entry.target);
-          }
+          entry.target.classList.toggle("is-visible", entry.isIntersecting);
         });
       },
       { threshold: 0.15 }
@@ -142,12 +151,9 @@
   var revealGroups = document.querySelectorAll(".reveal-group");
   if ("IntersectionObserver" in window && revealGroups.length) {
     var groupObserver = new IntersectionObserver(
-      function (entries, observer) {
+      function (entries) {
         entries.forEach(function (entry) {
-          if (entry.isIntersecting) {
-            entry.target.classList.add("is-visible");
-            observer.unobserve(entry.target);
-          }
+          entry.target.classList.toggle("is-visible", entry.isIntersecting);
         });
       },
       { threshold: 0.15 }
@@ -173,6 +179,13 @@
     });
   }
 
+  function deactivateHlPop(container) {
+    var boxes = container.querySelectorAll(".hl");
+    boxes.forEach(function (box) {
+      box.classList.remove("hl-pop", "hl-pulsing");
+    });
+  }
+
   var lineGroups = Array.prototype.slice.call(document.querySelectorAll(".reveal-lines"));
   var loadLineGroups = lineGroups.filter(function (el) { return el.hasAttribute("data-reveal-load"); });
   var scrollLineGroups = lineGroups.filter(function (el) { return !el.hasAttribute("data-reveal-load"); });
@@ -186,12 +199,14 @@
 
   if ("IntersectionObserver" in window && scrollLineGroups.length) {
     var lineObserver = new IntersectionObserver(
-      function (entries, observer) {
+      function (entries) {
         entries.forEach(function (entry) {
           if (entry.isIntersecting) {
             entry.target.classList.add("is-visible");
             activateHlPop(entry.target);
-            observer.unobserve(entry.target);
+          } else {
+            entry.target.classList.remove("is-visible");
+            deactivateHlPop(entry.target);
           }
         });
       },
