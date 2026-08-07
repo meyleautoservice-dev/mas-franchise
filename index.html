@@ -90,21 +90,38 @@
       <div class="stat-card">
         <div class="stat-card__row">
           <div class="stat-card__text">
-            <p class="stat-card__label">서울 기준 자동차 정비소</p>
-            <div class="stat-huge">
-              <span class="stat-huge__value">1,000</span>
-              <span class="stat-huge__arrow" aria-hidden="true">↓</span>
+            <p class="stat-card__label">
+              <span class="stat-card__label-sm">서울 기준</span>
+              <span class="stat-card__label-lg">자동차 정비소</span>
+            </p>
+            <p class="stat-card__intro">5년 전 대비 약</p>
+            <div class="stat-huge stat-huge--lift">
+              <span class="stat-huge__value">1<span class="stat-huge__comma">,</span>000</span>
             </div>
-            <p class="stat-card__headline">5년 전 대비 약 1,000여 점 감소</p>
+            <p class="stat-card__suffix">여 점 감소</p>
           </div>
-          <div class="bar-chart" role="img" aria-label="자동차 정비소 수, 2018년 2700곳에서 2023년 1700곳으로 감소">
-            <div class="bar-chart__col">
-              <div class="bar-chart__bar" data-target="2700" style="--h:100%"><span class="bar-chart__value">2,700</span></div>
-              <span class="bar-chart__axis">2018</span>
-            </div>
-            <div class="bar-chart__col">
-              <div class="bar-chart__bar bar-chart__bar--accent" data-target="1700" style="--h:63%"><span class="bar-chart__value">1,700</span></div>
-              <span class="bar-chart__axis">2023</span>
+          <div class="bar-chart-panel">
+            <svg class="bar-chart__trend" viewBox="0 0 100 60" preserveAspectRatio="none" aria-hidden="true">
+              <path d="M27,12 C50,-14 72,38 74.2,49.2" />
+              <polygon points="76.6,59.4 80.3,47.7 67.9,50.1" />
+            </svg>
+            <div class="bar-chart" role="img" aria-label="자동차 정비소 수, 2018년 2700곳에서 2023년 1700곳으로 감소">
+              <div class="bar-chart__plot">
+                <span class="bar-chart__yaxis" aria-hidden="true">↑</span>
+                <div class="bar-chart__guide" style="--h:100%"></div>
+                <div class="bar-chart__guide" style="--h:63%"></div>
+                <div class="bar-chart__col">
+                  <div class="bar-chart__bar" data-target="2700" style="--h:100%"><span class="bar-chart__value">2,700</span></div>
+                </div>
+                <div class="bar-chart__col">
+                  <div class="bar-chart__bar bar-chart__bar--accent" data-target="1700" style="--h:63%"><span class="bar-chart__value">1,700</span></div>
+                </div>
+                <span class="bar-chart__xaxis" aria-hidden="true">→</span>
+              </div>
+              <div class="bar-chart__labels">
+                <span>2018</span>
+                <span>2023</span>
+              </div>
             </div>
           </div>
         </div>
@@ -113,25 +130,39 @@
       <div class="stat-card">
         <div class="stat-card__row">
           <div class="stat-card__text">
-            <p class="stat-card__label">국산차·수입차 정비 비용 비교 (평균 수리비)</p>
+            <p class="stat-card__label">
+              <span class="stat-card__label-sm">국산차·수입차 정비 비용 비교</span>
+              <span class="stat-card__label-lg">평균 수리비</span>
+            </p>
+            <p class="stat-card__intro">국산차 ↔ 수입차 약</p>
             <div class="stat-huge">
               <span class="stat-huge__value">2.5</span>
-              <span class="stat-huge__arrow" aria-hidden="true">배</span>
+              <span class="stat-huge__suffix-inline" aria-hidden="true">배</span>
             </div>
-            <p class="stat-card__headline">국산차 대비 수입차 정비 단가 차이</p>
+            <p class="stat-card__suffix">차이</p>
+            <p class="stat-card__note">※ 평균 기준</p>
           </div>
-          <div class="bar-chart" role="img" aria-label="평균 수리비, 국산차 114만원, 수입차 282만원, 약 2.5배 차이">
-            <div class="bar-chart__col">
-              <div class="bar-chart__bar" data-target="1140000" data-suffix="원" style="--h:40%"><span class="bar-chart__value">1,140,000원</span></div>
-              <span class="bar-chart__axis">국산차</span>
-            </div>
-            <div class="bar-chart__col">
-              <div class="bar-chart__bar bar-chart__bar--accent" data-target="2820000" data-suffix="원" style="--h:100%"><span class="bar-chart__value">2,820,000원</span></div>
-              <span class="bar-chart__axis">수입차</span>
+          <div class="bar-chart-panel">
+            <div class="bar-chart" role="img" aria-label="평균 수리비, 국산차 114만원, 수입차 282만원, 약 2.5배 차이">
+              <div class="bar-chart__plot">
+                <span class="bar-chart__yaxis" aria-hidden="true">↑</span>
+                <div class="bar-chart__guide" style="--h:100%"></div>
+                <div class="bar-chart__guide" style="--h:40%"></div>
+                <div class="bar-chart__col">
+                  <div class="bar-chart__bar" data-target="1140000" data-suffix="원" style="--h:40%"><span class="bar-chart__value">1,140,000원</span></div>
+                </div>
+                <div class="bar-chart__col">
+                  <div class="bar-chart__bar bar-chart__bar--accent" data-target="2820000" data-suffix="원" style="--h:100%"><span class="bar-chart__value">2,820,000원</span></div>
+                </div>
+                <span class="bar-chart__xaxis" aria-hidden="true">→</span>
+              </div>
+              <div class="bar-chart__labels">
+                <span>국산차</span>
+                <span>수입차</span>
+              </div>
             </div>
           </div>
         </div>
-        <p class="stat-card__note">※ 평균 기준</p>
       </div>
     </div>
   </section>
@@ -142,7 +173,7 @@
       <p class="statement-band__q reveal-line" style="--i:0">해마다 급증하는 수입차 정비 시장,</p>
       <p class="statement-band__title">
         <span class="reveal-line" style="--i:1;display:inline-block">국내 최초 수입차 정비 전문 브랜드</span><br>
-        <span class="reveal-line" style="--i:2;display:inline-block"><span class="hl hl--accent">마일레 오토 서비스</span>가 답입니다.</span>
+        <span class="reveal-line" style="--i:2;display:inline-block"><span class="hl hl--accent hl--drop">마일레 오토 서비스</span>가 답입니다.</span>
       </p>
     </div>
   </section>
@@ -264,6 +295,49 @@
         <img src="assets/img/pangyo-building.jpg" alt="마일레 오토 서비스 판교직영센터 전경" loading="lazy">
         <figcaption>마일레 오토 서비스 판교직영센터 전경</figcaption>
       </figure>
+
+      <div class="review-marquee" aria-hidden="true">
+        <div class="review-marquee__row review-marquee__row--a">
+          <div class="review-marquee__track">
+            <div class="review-marquee__group">
+              <span class="review-marquee__item review-marquee__item--solid">Owners' Real Talk</span>
+              <span class="review-marquee__item review-marquee__item--outline">Owners' Real Talk</span>
+              <span class="review-marquee__item review-marquee__item--solid">Owners' Real Talk</span>
+              <span class="review-marquee__item review-marquee__item--outline">Owners' Real Talk</span>
+              <span class="review-marquee__item review-marquee__item--solid">Owners' Real Talk</span>
+              <span class="review-marquee__item review-marquee__item--outline">Owners' Real Talk</span>
+            </div>
+            <div class="review-marquee__group">
+              <span class="review-marquee__item review-marquee__item--solid">Owners' Real Talk</span>
+              <span class="review-marquee__item review-marquee__item--outline">Owners' Real Talk</span>
+              <span class="review-marquee__item review-marquee__item--solid">Owners' Real Talk</span>
+              <span class="review-marquee__item review-marquee__item--outline">Owners' Real Talk</span>
+              <span class="review-marquee__item review-marquee__item--solid">Owners' Real Talk</span>
+              <span class="review-marquee__item review-marquee__item--outline">Owners' Real Talk</span>
+            </div>
+          </div>
+        </div>
+        <div class="review-marquee__row review-marquee__row--b">
+          <div class="review-marquee__track">
+            <div class="review-marquee__group">
+              <span class="review-marquee__item review-marquee__item--outline">Owners' Real Talk</span>
+              <span class="review-marquee__item review-marquee__item--solid">Owners' Real Talk</span>
+              <span class="review-marquee__item review-marquee__item--outline">Owners' Real Talk</span>
+              <span class="review-marquee__item review-marquee__item--solid">Owners' Real Talk</span>
+              <span class="review-marquee__item review-marquee__item--outline">Owners' Real Talk</span>
+              <span class="review-marquee__item review-marquee__item--solid">Owners' Real Talk</span>
+            </div>
+            <div class="review-marquee__group">
+              <span class="review-marquee__item review-marquee__item--outline">Owners' Real Talk</span>
+              <span class="review-marquee__item review-marquee__item--solid">Owners' Real Talk</span>
+              <span class="review-marquee__item review-marquee__item--outline">Owners' Real Talk</span>
+              <span class="review-marquee__item review-marquee__item--solid">Owners' Real Talk</span>
+              <span class="review-marquee__item review-marquee__item--outline">Owners' Real Talk</span>
+              <span class="review-marquee__item review-marquee__item--solid">Owners' Real Talk</span>
+            </div>
+          </div>
+        </div>
+      </div>
 
       <div class="testimonial-block">
         <p class="eyebrow">마일레 오토 서비스를 선택한 이유</p>
@@ -522,7 +596,7 @@
         </article>
         <article class="benefit-card">
           <div class="benefit-card__media">
-            <img class="reveal-img" src="assets/img/benefit-promo.jpg" alt="SNS 및 온라인 브랜드 홍보" loading="lazy">
+            <img class="reveal-img" src="assets/img/benefit-nature-office.jpg" alt="모니터 화면 속 MAS 판교직영점 공식 블로그로 보는 SNS 및 온라인 브랜드 홍보" loading="lazy">
             <span class="tag-ribbon">혜택 3</span>
           </div>
           <h3 class="benefit-card__title">홍보</h3>
