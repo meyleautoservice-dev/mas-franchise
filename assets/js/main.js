@@ -278,6 +278,7 @@
   var quickToggle = document.getElementById("quickInquiryToggle");
   var quickForm = document.getElementById("quickInquiryForm");
   var quickNote = document.getElementById("quickInquiryNote");
+  var quickSubmitBtn = document.getElementById("quickInquirySubmit");
   var quickLabel = quickToggle ? quickToggle.querySelector(".quick-inquiry__toggle-label") : null;
 
   function setQuickOpen(isOpen) {
@@ -291,6 +292,16 @@
     quickToggle.addEventListener("click", function () {
       var isOpen = quickToggle.getAttribute("aria-expanded") === "true";
       setQuickOpen(!isOpen);
+    });
+  }
+
+  if (quickInquiry && quickSubmitBtn) {
+    quickSubmitBtn.addEventListener("click", function (e) {
+      var isOpen = quickInquiry.getAttribute("data-open") === "true";
+      if (!isOpen) {
+        e.preventDefault();
+        setQuickOpen(true);
+      }
     });
   }
 
