@@ -595,7 +595,6 @@ table { border-collapse: collapse; width: 100%; }
   width: max-content;
   animation: rolling-gallery-scroll 72s linear infinite;
 }
-.rolling-gallery:hover .rolling-gallery__track { animation-play-state: paused; }
 .rolling-gallery__group {
   display: flex;
   align-items: center;
@@ -659,7 +658,6 @@ table { border-collapse: collapse; width: 100%; }
 .review-marquee__track { display: flex; width: max-content; }
 .review-marquee__row--a .review-marquee__track { animation: review-marquee-scroll 26s linear infinite; }
 .review-marquee__row--b .review-marquee__track { animation: review-marquee-scroll 26s linear infinite reverse; }
-.review-marquee:hover .review-marquee__track { animation-play-state: paused; }
 .review-marquee__group { display: flex; align-items: center; flex-shrink: 0; }
 .review-marquee__item {
   display: inline-flex;
