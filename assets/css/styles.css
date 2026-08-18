@@ -41,7 +41,7 @@
 html { scroll-behavior: smooth; }
 body {
   margin: 0;
-  padding-bottom: var(--quick-bar-h);
+  padding-bottom: calc(var(--quick-bar-h) + env(safe-area-inset-bottom, 0px));
   font-family: var(--font-body);
   color: var(--c-ink);
   background: var(--c-soft-white);
@@ -965,6 +965,10 @@ table { border-collapse: collapse; width: 100%; }
   right: 0;
   bottom: 0;
   z-index: 700;
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+  background: var(--c-blue);
+  transform: translateZ(0);
+  -webkit-transform: translateZ(0);
 }
 
 .quick-inquiry__bar {
@@ -1027,7 +1031,7 @@ table { border-collapse: collapse; width: 100%; }
   padding: 0 24px;
 }
 .quick-inquiry[data-open="true"] .quick-inquiry__panel {
-  max-height: min(560px, calc(100vh - var(--header-h) - var(--quick-bar-h)));
+  max-height: min(560px, calc(100vh - var(--header-h) - var(--quick-bar-h) - env(safe-area-inset-bottom, 0px)));
   opacity: 1;
   overflow-y: auto;
   padding: 24px 24px 4px;

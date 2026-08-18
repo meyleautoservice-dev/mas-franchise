@@ -2,7 +2,7 @@
 <html lang="ko">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>마일레 오토 서비스 가맹 창업 | MEYLE Auto Service</title>
 <meta name="description" content="국내 최초 수입차 정비 전문 네트워크, 마일레 오토 서비스 가맹 창업 안내">
 <style>
@@ -49,7 +49,7 @@
 html { scroll-behavior: smooth; }
 body {
   margin: 0;
-  padding-bottom: var(--quick-bar-h);
+  padding-bottom: calc(var(--quick-bar-h) + env(safe-area-inset-bottom, 0px));
   font-family: var(--font-body);
   color: var(--c-ink);
   background: var(--c-soft-white);
@@ -973,6 +973,10 @@ table { border-collapse: collapse; width: 100%; }
   right: 0;
   bottom: 0;
   z-index: 700;
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+  background: var(--c-blue);
+  transform: translateZ(0);
+  -webkit-transform: translateZ(0);
 }
 
 .quick-inquiry__bar {
@@ -1035,7 +1039,7 @@ table { border-collapse: collapse; width: 100%; }
   padding: 0 24px;
 }
 .quick-inquiry[data-open="true"] .quick-inquiry__panel {
-  max-height: min(560px, calc(100vh - var(--header-h) - var(--quick-bar-h)));
+  max-height: min(560px, calc(100vh - var(--header-h) - var(--quick-bar-h) - env(safe-area-inset-bottom, 0px)));
   opacity: 1;
   overflow-y: auto;
   padding: 24px 24px 4px;
@@ -1908,6 +1912,11 @@ table { border-collapse: collapse; width: 100%; }
   window.addEventListener("scroll", scheduleVisibilityCheck, { passive: true });
   window.addEventListener("resize", scheduleVisibilityCheck);
   window.addEventListener("orientationchange", scheduleVisibilityCheck);
+  window.addEventListener("touchmove", scheduleVisibilityCheck, { passive: true });
+  // 일부 모바일 브라우저에서 스크롤 이벤트가 누락되는 경우를 대비한 보조 폴링
+  setInterval(function () {
+    visibilityCheckers.forEach(function (fn) { fn(); });
+  }, 350);
 
   function defaultBounds() {
     var vh = window.innerHeight || document.documentElement.clientHeight;

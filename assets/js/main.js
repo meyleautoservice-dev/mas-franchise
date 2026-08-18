@@ -47,6 +47,11 @@
   window.addEventListener("scroll", scheduleVisibilityCheck, { passive: true });
   window.addEventListener("resize", scheduleVisibilityCheck);
   window.addEventListener("orientationchange", scheduleVisibilityCheck);
+  window.addEventListener("touchmove", scheduleVisibilityCheck, { passive: true });
+  // 일부 모바일 브라우저에서 스크롤 이벤트가 누락되는 경우를 대비한 보조 폴링
+  setInterval(function () {
+    visibilityCheckers.forEach(function (fn) { fn(); });
+  }, 350);
 
   function defaultBounds() {
     var vh = window.innerHeight || document.documentElement.clientHeight;
