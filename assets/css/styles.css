@@ -404,6 +404,9 @@ table { border-collapse: collapse; width: 100%; }
 }
 .hero__title-light { font-weight: 500; }
 .hero__title-row { display: flex; justify-content: center; }
+@media (max-width: 640px) {
+  .hero__title { font-size: 43px; }
+}
 .hero__lead { margin-top: 20px; font-size: 25.5px; line-height: 1.7; color: rgba(255, 255, 255, 0.86); }
 .hero__content .btn { margin-top: 32px; }
 
