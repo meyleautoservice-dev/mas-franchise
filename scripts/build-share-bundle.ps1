@@ -76,6 +76,41 @@ $fontBytes = [System.IO.File]::ReadAllBytes((Join-Path $Root "assets/fonts/Prete
 $fontB64 = [Convert]::ToBase64String($fontBytes)
 $css = $css -replace [regex]::Escape('url("../fonts/PretendardVariable.woff2")'), ('url("data:font/woff2;base64,' + $fontB64 + '")')
 
+# Rolling gallery: the seamless loop duplicates every <img> (once per copy
+# of the group), so as data URIs each image's full base64 text would sit
+# in the DOM twice -- real memory just to hold the string, on top of
+# whatever the browser does for decode. Define each unique rolling image's
+# background-image ONCE in CSS and have both loop copies reference it by
+# class, instead of inlining the same data URI into two <img src="..."> .
+$rollingDir = Join-Path $Root "assets/img/rolling"
+$rollingCss = "`n/* 롤링 갤러리: 배경이미지를 클래스로 1회만 정의, 양쪽 루프 그룹이 공유 (DOM 중복 방지) */`n"
+$rollingCss += @"
+.rolling-gallery__img {
+  height: 630px;
+  aspect-ratio: 3 / 2;
+  background-size: cover;
+  background-position: center;
+  border-radius: 12px;
+  box-shadow: var(--shadow-card);
+  flex-shrink: 0;
+}
+@media (max-width: 768px) {
+  .rolling-gallery__img { height: 320px; }
+}
+"@
+Get-ChildItem $rollingDir -Filter "rolling-*.jpg" | ForEach-Object {
+    $slug = $_.BaseName -replace '^rolling-', ''
+    $origLen = $_.Length
+    $result = Get-ResizedBytes -Path $_.FullName -MaxEdge 950 -Transparent $false -JpegQuality 62
+    $b64 = [Convert]::ToBase64String($result.Bytes)
+    $rollingCss += (".rolling-gallery__img--{0} {{ background-image: url(data:{1};base64,{2}); }}`n" -f $slug, $result.Mime, $b64)
+    $imgTagPattern = '<img src="assets/img/rolling/' + [regex]::Escape($_.Name) + '"[^>]*>'
+    $replacement = '<div class="rolling-gallery__img rolling-gallery__img--' + $slug + '"></div>'
+    $html = $html -replace $imgTagPattern, $replacement
+    Write-Host ("{0,-45} {1,8:N0} KB -> {2,8:N0} KB (shared by both loop copies)" -f $_.Name, ($origLen/1KB), ($result.Bytes.Length/1KB))
+}
+$css = $css + $rollingCss
+
 # Inline every image, resized/recompressed per its role.
 # (Note: [regex]::Replace($html,{scriptblock}) via automatic MatchEvaluator
 # conversion has been observed to silently lose its closure over $cache in
