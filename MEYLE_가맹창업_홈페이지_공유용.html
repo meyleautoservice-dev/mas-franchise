@@ -1892,6 +1892,50 @@ table { border-collapse: collapse; width: 100%; }
     link.addEventListener("click", closeNav);
   });
 
+  /* ---------- 스크롤 가시성 감지 (IntersectionObserver 대체) ----------
+     일부 모바일 브라우저는 file:// 로 연 로컬 페이지에서 IntersectionObserver가
+     제대로 동작하지 않는 경우가 있어(서버 배포본에서는 정상), getBoundingClientRect
+     기반 자체 스크롤 감시로 대체해 어떤 환경에서 열어도 모션이 재생되도록 한다. */
+  var visibilityCheckers = [];
+  var visibilityRaf = null;
+  function scheduleVisibilityCheck() {
+    if (visibilityRaf) return;
+    visibilityRaf = requestAnimationFrame(function () {
+      visibilityRaf = null;
+      visibilityCheckers.forEach(function (fn) { fn(); });
+    });
+  }
+  window.addEventListener("scroll", scheduleVisibilityCheck, { passive: true });
+  window.addEventListener("resize", scheduleVisibilityCheck);
+  window.addEventListener("orientationchange", scheduleVisibilityCheck);
+
+  function defaultBounds() {
+    var vh = window.innerHeight || document.documentElement.clientHeight;
+    return { top: 0, bottom: vh };
+  }
+
+  function watchVisibility(elements, threshold, boundsFn, onChange) {
+    var list = Array.prototype.slice.call(elements);
+    var lastState = list.map(function () { return false; });
+    function runCheck() {
+      var bounds = boundsFn();
+      list.forEach(function (el, i) {
+        var rect = el.getBoundingClientRect();
+        var visibleTop = Math.max(rect.top, bounds.top);
+        var visibleBottom = Math.min(rect.bottom, bounds.bottom);
+        var visibleHeight = Math.max(0, visibleBottom - visibleTop);
+        var ratio = rect.height > 0 ? visibleHeight / rect.height : 0;
+        var isVisible = threshold <= 0 ? ratio > 0 : ratio >= threshold;
+        if (isVisible !== lastState[i]) {
+          lastState[i] = isVisible;
+          onChange(el, isVisible);
+        }
+      });
+    }
+    visibilityCheckers.push(runCheck);
+    runCheck();
+  }
+
   /* ---------- 스크롤 시 상단 내비 활성 링크 하이라이트 ---------- */
   var headerH = header.offsetHeight;
 
@@ -1902,19 +1946,17 @@ table { border-collapse: collapse; width: 100%; }
     });
   }
 
-  if ("IntersectionObserver" in window) {
-    var navObserver = new IntersectionObserver(
-      function (entries) {
-        entries.forEach(function (entry) {
-          if (entry.isIntersecting) {
-            setActiveLink(entry.target.id);
-          }
-        });
-      },
-      { rootMargin: "-" + headerH + "px 0px -70% 0px", threshold: 0 }
-    );
-    sections.forEach(function (section) { navObserver.observe(section); });
-  }
+  watchVisibility(
+    sections,
+    0,
+    function () {
+      var vh = window.innerHeight || document.documentElement.clientHeight;
+      return { top: headerH, bottom: vh * 0.3 };
+    },
+    function (section, isVisible) {
+      if (isVisible) setActiveLink(section.id);
+    }
+  );
 
   /* ---------- 통계 막대 그래프 애니메이션 (시장 성장성) ---------- */
   var bars = Array.prototype.slice.call(document.querySelectorAll(".bar-chart__bar"));
@@ -1940,66 +1982,36 @@ table { border-collapse: collapse; width: 100%; }
     el.textContent = "0" + (suffix || "");
   }
 
-  if ("IntersectionObserver" in window && bars.length) {
-    var barObserver = new IntersectionObserver(
-      function (entries) {
-        entries.forEach(function (entry) {
-          var bar = entry.target;
-          var target = parseInt(bar.getAttribute("data-target"), 10);
-          var suffix = bar.getAttribute("data-suffix") || "";
-          var valueEl = bar.querySelector(".bar-chart__value");
-          if (entry.isIntersecting) {
-            bar.classList.add("in-view");
-            if (valueEl && !isNaN(target)) animateCount(valueEl, target, suffix);
-          } else {
-            bar.classList.remove("in-view");
-            if (valueEl) resetCount(valueEl, suffix);
-          }
-        });
-      },
-      { threshold: 0.4 }
-    );
-    bars.forEach(function (bar) { barObserver.observe(bar); });
-  } else {
-    bars.forEach(function (bar) { bar.classList.add("in-view"); });
-  }
+  watchVisibility(bars, 0.4, defaultBounds, function (bar, isVisible) {
+    var target = parseInt(bar.getAttribute("data-target"), 10);
+    var suffix = bar.getAttribute("data-suffix") || "";
+    var valueEl = bar.querySelector(".bar-chart__value");
+    if (isVisible) {
+      bar.classList.add("in-view");
+      if (valueEl && !isNaN(target)) animateCount(valueEl, target, suffix);
+    } else {
+      bar.classList.remove("in-view");
+      if (valueEl) resetCount(valueEl, suffix);
+    }
+  });
 
   /* ---------- 시장 성장성 트렌드 화살표 좌→우 드로잉 모션 ---------- */
   var trendArrows = Array.prototype.slice.call(document.querySelectorAll(".bar-chart__trend"));
-  if ("IntersectionObserver" in window && trendArrows.length) {
-    var trendObserver = new IntersectionObserver(
-      function (entries) {
-        entries.forEach(function (entry) {
-          entry.target.classList.toggle("in-view", entry.isIntersecting);
-        });
-      },
-      { threshold: 0.4 }
-    );
-    trendArrows.forEach(function (svg) { trendObserver.observe(svg); });
-  } else {
-    trendArrows.forEach(function (svg) { svg.classList.add("in-view"); });
-  }
+  watchVisibility(trendArrows, 0.4, defaultBounds, function (svg, isVisible) {
+    svg.classList.toggle("in-view", isVisible);
+  });
 
   /* ---------- 하이라이트 숫자 카운트업 (마일레 소개 120개국·24,000종) ---------- */
   var countTargets = Array.prototype.slice.call(document.querySelectorAll(".hl-count"));
-  if ("IntersectionObserver" in window && countTargets.length) {
-    var countObserver = new IntersectionObserver(
-      function (entries) {
-        entries.forEach(function (entry) {
-          var el = entry.target;
-          var target = parseInt(el.getAttribute("data-count-target"), 10);
-          var suffix = el.getAttribute("data-count-suffix") || "";
-          if (entry.isIntersecting) {
-            if (!isNaN(target)) animateCount(el, target, suffix);
-          } else {
-            resetCount(el, suffix);
-          }
-        });
-      },
-      { threshold: 0.6 }
-    );
-    countTargets.forEach(function (el) { countObserver.observe(el); });
-  }
+  watchVisibility(countTargets, 0.6, defaultBounds, function (el, isVisible) {
+    var target = parseInt(el.getAttribute("data-count-target"), 10);
+    var suffix = el.getAttribute("data-count-suffix") || "";
+    if (isVisible) {
+      if (!isNaN(target)) animateCount(el, target, suffix);
+    } else {
+      resetCount(el, suffix);
+    }
+  });
 
   /* ---------- 섹션 등장 애니메이션 ---------- */
   var revealTargets = document.querySelectorAll(
@@ -2010,35 +2022,15 @@ table { border-collapse: collapse; width: 100%; }
   var revealImgTargets = document.querySelectorAll(".reveal-img");
   var allReveal = Array.prototype.slice.call(revealTargets).concat(Array.prototype.slice.call(revealImgTargets));
 
-  if ("IntersectionObserver" in window) {
-    var revealObserver = new IntersectionObserver(
-      function (entries) {
-        entries.forEach(function (entry) {
-          entry.target.classList.toggle("is-visible", entry.isIntersecting);
-        });
-      },
-      { threshold: 0.15 }
-    );
-    allReveal.forEach(function (el) { revealObserver.observe(el); });
-  } else {
-    allReveal.forEach(function (el) { el.classList.add("is-visible"); });
-  }
+  watchVisibility(allReveal, 0.15, defaultBounds, function (el, isVisible) {
+    el.classList.toggle("is-visible", isVisible);
+  });
 
   /* ---------- 그룹 순차 등장(카드가 순서대로 하나씩 노출) ---------- */
   var revealGroups = document.querySelectorAll(".reveal-group");
-  if ("IntersectionObserver" in window && revealGroups.length) {
-    var groupObserver = new IntersectionObserver(
-      function (entries) {
-        entries.forEach(function (entry) {
-          entry.target.classList.toggle("is-visible", entry.isIntersecting);
-        });
-      },
-      { threshold: 0.15 }
-    );
-    revealGroups.forEach(function (el) { groupObserver.observe(el); });
-  } else {
-    revealGroups.forEach(function (el) { el.classList.add("is-visible"); });
-  }
+  watchVisibility(revealGroups, 0.15, defaultBounds, function (el, isVisible) {
+    el.classList.toggle("is-visible", isVisible);
+  });
 
   /* ---------- 텍스트 라인 순차 등장(스태거) + 하이라이트 박스 bounce-in ---------- */
   function activateHlPop(container) {
@@ -2074,28 +2066,15 @@ table { border-collapse: collapse; width: 100%; }
     });
   });
 
-  if ("IntersectionObserver" in window && scrollLineGroups.length) {
-    var lineObserver = new IntersectionObserver(
-      function (entries) {
-        entries.forEach(function (entry) {
-          if (entry.isIntersecting) {
-            entry.target.classList.add("is-visible");
-            activateHlPop(entry.target);
-          } else {
-            entry.target.classList.remove("is-visible");
-            deactivateHlPop(entry.target);
-          }
-        });
-      },
-      { threshold: 0.4 }
-    );
-    scrollLineGroups.forEach(function (el) { lineObserver.observe(el); });
-  } else {
-    scrollLineGroups.forEach(function (el) {
+  watchVisibility(scrollLineGroups, 0.4, defaultBounds, function (el, isVisible) {
+    if (isVisible) {
       el.classList.add("is-visible");
       activateHlPop(el);
-    });
-  }
+    } else {
+      el.classList.remove("is-visible");
+      deactivateHlPop(el);
+    }
+  });
 
   /* ---------- 창업 문의 폼 ---------- */
   var form = document.getElementById("contactForm");
