@@ -1871,6 +1871,12 @@ table { border-collapse: collapse; width: 100%; }
 (function () {
   "use strict";
 
+  // 경량(iOS 전용) 빌드에서는 스크립트가 이 줄을 true로 치환해 스크롤 모션 감시
+  // 전체(rAF 스케줄러, scroll/resize/touchmove 리스너, 350ms 폴링, 각 watchVisibility
+  // 호출)를 아예 실행하지 않는다 — 저사양 기기에서 메인 스레드 부담을 줄이기 위함.
+  // 시각적으로는 CSS 쪽 별도 오버라이드가 모든 모션 요소를 처음부터 최종 상태로 보여준다.
+  var LIGHT_MODE = false;
+
   var header = document.getElementById("siteHeader");
   var nav = document.getElementById("mainNav");
   var navToggle = document.getElementById("navToggle");
@@ -1904,7 +1910,11 @@ table { border-collapse: collapse; width: 100%; }
   /* ---------- 스크롤 가시성 감지 (IntersectionObserver 대체) ----------
      일부 모바일 브라우저는 file:// 로 연 로컬 페이지에서 IntersectionObserver가
      제대로 동작하지 않는 경우가 있어(서버 배포본에서는 정상), getBoundingClientRect
-     기반 자체 스크롤 감시로 대체해 어떤 환경에서 열어도 모션이 재생되도록 한다. */
+     기반 자체 스크롤 감시로 대체해 어떤 환경에서 열어도 모션이 재생되도록 한다.
+     LIGHT_MODE에서는 이 블록 전체(리스너 등록, 폴링, watchVisibility 호출)를
+     건너뛴다 — 시각적으로는 별도 CSS 오버라이드가 모든 요소를 처음부터 최종
+     상태로 보여주므로 동작에는 문제가 없고, 메인 스레드 부담만 사라진다. */
+  if (!LIGHT_MODE) {
   var visibilityCheckers = [];
   var visibilityRaf = null;
   function scheduleVisibilityCheck() {
@@ -2096,6 +2106,7 @@ table { border-collapse: collapse; width: 100%; }
       deactivateHlPop(el);
     }
   });
+  } // !LIGHT_MODE
 
   /* ---------- 창업 문의 폼 ---------- */
   var form = document.getElementById("contactForm");
