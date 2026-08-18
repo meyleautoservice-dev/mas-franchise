@@ -1,14 +1,6 @@
-<#
-  index.html/assets/css/js/img을 하나의 자기완결형 HTML로 합쳐서
-  MEYLE_가맹창업_홈페이지_공유용.html을 생성한다 (이메일/메신저로 파일 하나만 공유 가능).
-  이미지는 실제 표시 크기에 맞춰 리사이즈 + 재압축해서 파일 용량을 크게 줄인다
-  (원본 assets/img/*는 건드리지 않음 — 이 스크립트의 출력물에만 적용).
-
-  사용법: website/ 안에서 `powershell -File scripts/build-share-bundle.ps1` 실행.
-#>
 param(
-    [string]$Root = (Split-Path -Parent $PSScriptRoot),
-    [string]$OutPath = (Join-Path (Split-Path -Parent $PSScriptRoot) "MEYLE_가맹창업_홈페이지_공유용.html")
+    [Parameter(Mandatory=$true)][string]$Root,
+    [Parameter(Mandatory=$true)][string]$OutPath
 )
 
 Add-Type -AssemblyName System.Drawing
@@ -61,6 +53,7 @@ function Get-ImageProfile {
     if ($FileName -match "badge-|point-") { return @{ MaxEdge = 320; Transparent = $true } }
     if ($FileName -match "logo-.*horizontal") { return @{ MaxEdge = 360; Transparent = $true } }
     if ($FileName -match "symbol-|logo-") { return @{ MaxEdge = 260; Transparent = $true } }
+    if ($FileName -match "^rolling-") { return @{ MaxEdge = 950; Transparent = $false } }
     return @{ MaxEdge = 1100; Transparent = $false }
 }
 
@@ -70,12 +63,12 @@ $html = [System.IO.File]::ReadAllText((Join-Path $Root "index.html"), [System.Te
 $css = [System.IO.File]::ReadAllText((Join-Path $Root "assets/css/styles.css"), [System.Text.Encoding]::UTF8)
 $js = [System.IO.File]::ReadAllText((Join-Path $Root "assets/js/main.js"), [System.Text.Encoding]::UTF8)
 
-# 폰트는 리사이즈 대상이 아니라 그대로 인라인 처리
+# Inline the font (unchanged, not resized)
 $fontBytes = [System.IO.File]::ReadAllBytes((Join-Path $Root "assets/fonts/PretendardVariable.woff2"))
 $fontB64 = [Convert]::ToBase64String($fontBytes)
 $css = $css -replace [regex]::Escape('url("../fonts/PretendardVariable.woff2")'), ('url("data:font/woff2;base64,' + $fontB64 + '")')
 
-# 이미지는 역할별 목표 해상도로 리사이즈 + 재압축 후 인라인
+# Inline every image, resized/recompressed per its role
 $cache = @{}
 $totalOrig = 0
 $totalNew = 0
@@ -87,7 +80,8 @@ $html = $imgRegex.Replace($html, {
         $absPath = Join-Path $Root $relPath
         $origLen = (Get-Item $absPath).Length
         $profile = Get-ImageProfile ([System.IO.Path]::GetFileName($relPath))
-        $result = Get-ResizedBytes -Path $absPath -MaxEdge $profile.MaxEdge -Transparent $profile.Transparent -JpegQuality 70
+        $q = if ($relPath -match "rolling-") { 62 } else { 70 }
+        $result = Get-ResizedBytes -Path $absPath -MaxEdge $profile.MaxEdge -Transparent $profile.Transparent -JpegQuality $q
         $b64 = [Convert]::ToBase64String($result.Bytes)
         $script:totalOrig += $origLen
         $script:totalNew += $result.Bytes.Length
