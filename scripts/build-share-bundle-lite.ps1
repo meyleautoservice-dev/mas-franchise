@@ -71,6 +71,11 @@ $js = [System.IO.File]::ReadAllText((Join-Path $Root "assets/js/main.js"), [Syst
 # 경량 빌드 스위치 켜기
 $js = $js -replace 'var LIGHT_MODE = false;', 'var LIGHT_MODE = true;'
 
+# loading="lazy"는 data URI로 이미 전부 인라인된 이미지에는 의미가 없고,
+# 계속 transform되는 롤링 갤러리 안에서는 일부 모바일 브라우저가 "뷰포트 근접" 판정을
+# 못해 이미지가 영영 렌더링되지 않는 문제가 있었다. 번들 전용으로 제거.
+$html = $html -replace ' loading="lazy"', ''
+
 # 모션 요소를 처음부터 최종 상태로 고정하는 오버라이드 (noscript 폴백과 동일한 선택자 사용)
 $lightCss = @"
 

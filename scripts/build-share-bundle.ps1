@@ -63,6 +63,14 @@ $html = [System.IO.File]::ReadAllText((Join-Path $Root "index.html"), [System.Te
 $css = [System.IO.File]::ReadAllText((Join-Path $Root "assets/css/styles.css"), [System.Text.Encoding]::UTF8)
 $js = [System.IO.File]::ReadAllText((Join-Path $Root "assets/js/main.js"), [System.Text.Encoding]::UTF8)
 
+# loading="lazy" defers the network fetch of an image until it nears the
+# viewport -- meaningless once every image is an inline data URI (already
+# fully downloaded as part of the HTML), and on some mobile browsers the
+# lazy "near viewport" check never fires for images sitting inside a
+# continuously CSS-transformed strip (the rolling gallery), leaving them
+# permanently unrendered. Strip it for the standalone bundle only.
+$html = $html -replace ' loading="lazy"', ''
+
 # Inline the font (unchanged, not resized)
 $fontBytes = [System.IO.File]::ReadAllBytes((Join-Path $Root "assets/fonts/PretendardVariable.woff2"))
 $fontB64 = [Convert]::ToBase64String($fontBytes)

@@ -284,8 +284,6 @@ table { border-collapse: collapse; width: 100%; }
   display: flex;
   width: max-content;
   animation: ticker-scroll 52s linear infinite;
-  transform: translateZ(0);
-  will-change: transform;
 }
 .ticker__group {
   display: flex;
@@ -587,8 +585,6 @@ table { border-collapse: collapse; width: 100%; }
   display: flex;
   width: max-content;
   animation: rolling-gallery-scroll 72s linear infinite;
-  transform: translateZ(0);
-  will-change: transform;
 }
 .rolling-gallery__group {
   display: flex;
@@ -650,7 +646,7 @@ table { border-collapse: collapse; width: 100%; }
   padding: 27px 0;
 }
 .review-marquee__row + .review-marquee__row { margin-top: 15px; }
-.review-marquee__track { display: flex; width: max-content; transform: translateZ(0); will-change: transform; }
+.review-marquee__track { display: flex; width: max-content; }
 .review-marquee__row--a .review-marquee__track { animation: review-marquee-scroll 32.5s linear infinite; }
 .review-marquee__row--b .review-marquee__track { animation: review-marquee-scroll 32.5s linear infinite reverse; }
 .review-marquee__group { display: flex; align-items: center; flex-shrink: 0; }
