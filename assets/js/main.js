@@ -103,6 +103,22 @@
     bars.forEach(function (bar) { bar.classList.add("in-view"); });
   }
 
+  /* ---------- 시장 성장성 트렌드 화살표 좌→우 드로잉 모션 ---------- */
+  var trendArrows = Array.prototype.slice.call(document.querySelectorAll(".bar-chart__trend"));
+  if ("IntersectionObserver" in window && trendArrows.length) {
+    var trendObserver = new IntersectionObserver(
+      function (entries) {
+        entries.forEach(function (entry) {
+          entry.target.classList.toggle("in-view", entry.isIntersecting);
+        });
+      },
+      { threshold: 0.4 }
+    );
+    trendArrows.forEach(function (svg) { trendObserver.observe(svg); });
+  } else {
+    trendArrows.forEach(function (svg) { svg.classList.add("in-view"); });
+  }
+
   /* ---------- 하이라이트 숫자 카운트업 (마일레 소개 120개국·24,000종) ---------- */
   var countTargets = Array.prototype.slice.call(document.querySelectorAll(".hl-count"));
   if ("IntersectionObserver" in window && countTargets.length) {
