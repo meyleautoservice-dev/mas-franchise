@@ -65,11 +65,18 @@
       var bounds = boundsFn();
       list.forEach(function (el, i) {
         var rect = el.getBoundingClientRect();
-        var visibleTop = Math.max(rect.top, bounds.top);
-        var visibleBottom = Math.min(rect.bottom, bounds.bottom);
-        var visibleHeight = Math.max(0, visibleBottom - visibleTop);
-        var ratio = rect.height > 0 ? visibleHeight / rect.height : 0;
-        var isVisible = threshold <= 0 ? ratio > 0 : ratio >= threshold;
+        var isVisible;
+        if (rect.height <= 0) {
+          // 애니메이션 시작 전 height:0인 요소(예: 막대그래프)는 면적이 없어 비율을
+          // 계산할 수 없으므로, 위치(점)가 관찰 범위 안에 있는지로 판단한다.
+          isVisible = rect.top >= bounds.top && rect.top <= bounds.bottom;
+        } else {
+          var visibleTop = Math.max(rect.top, bounds.top);
+          var visibleBottom = Math.min(rect.bottom, bounds.bottom);
+          var visibleHeight = Math.max(0, visibleBottom - visibleTop);
+          var ratio = visibleHeight / rect.height;
+          isVisible = threshold <= 0 ? ratio > 0 : ratio >= threshold;
+        }
         if (isVisible !== lastState[i]) {
           lastState[i] = isVisible;
           onChange(el, isVisible);

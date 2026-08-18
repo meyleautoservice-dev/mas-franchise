@@ -269,15 +269,13 @@ table { border-collapse: collapse; width: 100%; }
   animation-delay: 0.3s;
 }
 
-/* 멕시카나(mexicanaopen.kr) '37년 역사가 증명하는 대한민국이 선택한 1위 치킨 프랜차이즈!' 텍스트 실측 모션.
-   animate.css backInDown 그대로 사용 (elastic 오버슈트 없이 위에서 떨어지며 스케일업, 0~80%는 0.7배로 유지 후 80~100%에 1배로 팝). */
+/* 부드럽게 페이드+슬라이드로 노출되는 모션 (각도 회전 제거 후 단일 완만한 감속 곡선으로 재조정) */
 @keyframes hl-drop-in {
-  0% { opacity: 0.7; transform: translateY(-90px) scale(0.7); }
-  80% { opacity: 0.7; transform: translateY(0) scale(0.7); }
+  0% { opacity: 0; transform: translateY(-22px) scale(0.94); }
   100% { opacity: 1; transform: translateY(0) scale(1); }
 }
 .hl--drop.hl-pop {
-  animation: hl-drop-in 1s ease both;
+  animation: hl-drop-in 0.9s cubic-bezier(0.16, 1, 0.3, 1) both;
   animation-delay: 0.3s;
 }
 
@@ -1506,10 +1504,10 @@ table { border-collapse: collapse; width: 100%; }
   <!-- 인터루드 2 -->
   <section class="statement-band">
     <div class="container reveal-lines">
-      <p class="statement-band__q reveal-line" style="--i:0">매장을 늘려도, 남는 게 없다면?</p>
+      <p class="statement-band__q reveal-line" style="--i:0">수입차는 느는데, 혼자 버틸 수 있을까요?</p>
       <p class="statement-band__title">
-        <span class="reveal-line" style="--i:1;display:inline-block"><span class="hl">매출이 아니라 수익</span>으로</span><br>
-        <span class="reveal-line" style="--i:2;display:inline-block">증명하는 창업을 시작하세요.</span>
+        <span class="reveal-line" style="--i:1;display:inline-block">마일레 오토 서비스는</span><br>
+        <span class="reveal-line" style="--i:2;display:inline-block"><span class="hl">선택이 아니라 필수</span>입니다.</span>
       </p>
     </div>
   </section>
@@ -1930,11 +1928,18 @@ table { border-collapse: collapse; width: 100%; }
       var bounds = boundsFn();
       list.forEach(function (el, i) {
         var rect = el.getBoundingClientRect();
-        var visibleTop = Math.max(rect.top, bounds.top);
-        var visibleBottom = Math.min(rect.bottom, bounds.bottom);
-        var visibleHeight = Math.max(0, visibleBottom - visibleTop);
-        var ratio = rect.height > 0 ? visibleHeight / rect.height : 0;
-        var isVisible = threshold <= 0 ? ratio > 0 : ratio >= threshold;
+        var isVisible;
+        if (rect.height <= 0) {
+          // 애니메이션 시작 전 height:0인 요소(예: 막대그래프)는 면적이 없어 비율을
+          // 계산할 수 없으므로, 위치(점)가 관찰 범위 안에 있는지로 판단한다.
+          isVisible = rect.top >= bounds.top && rect.top <= bounds.bottom;
+        } else {
+          var visibleTop = Math.max(rect.top, bounds.top);
+          var visibleBottom = Math.min(rect.bottom, bounds.bottom);
+          var visibleHeight = Math.max(0, visibleBottom - visibleTop);
+          var ratio = visibleHeight / rect.height;
+          isVisible = threshold <= 0 ? ratio > 0 : ratio >= threshold;
+        }
         if (isVisible !== lastState[i]) {
           lastState[i] = isVisible;
           onChange(el, isVisible);
