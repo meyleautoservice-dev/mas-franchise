@@ -261,13 +261,20 @@ table { border-collapse: collapse; width: 100%; }
   animation-delay: 0.3s;
 }
 
-/* 부드럽게 페이드+슬라이드로 노출되는 모션 (각도 회전 제거 후 단일 완만한 감속 곡선으로 재조정) */
-@keyframes hl-drop-in {
-  0% { opacity: 0; transform: translateY(-22px) scale(0.94); }
-  100% { opacity: 1; transform: translateY(0) scale(1); }
+/* 좌→우 하이라이터 색 채움 모션 */
+@keyframes hl-sweep-in {
+  0% { background-size: 0% 100%; color: var(--c-white); }
+  70% { color: var(--c-white); }
+  100% { background-size: 100% 100%; color: var(--c-dark-blue); }
 }
-.hl--drop.hl-pop {
-  animation: hl-drop-in 0.9s cubic-bezier(0.16, 1, 0.3, 1) both;
+.hl--sweep {
+  background-color: transparent;
+  background-image: linear-gradient(var(--c-turquoise), var(--c-turquoise));
+  background-repeat: no-repeat;
+  background-position: left center;
+}
+.hl--sweep.hl-pop {
+  animation: hl-sweep-in 0.9s var(--ease) both;
   animation-delay: 0.3s;
 }
 
@@ -465,12 +472,13 @@ table { border-collapse: collapse; width: 100%; }
   stroke-dasharray: 1;
   stroke-dashoffset: 1;
   transition: stroke-dashoffset 1.1s var(--ease);
+  transition-delay: 1.5s;
 }
 .bar-chart__trend polygon {
   fill: var(--c-turquoise);
   opacity: 0;
   transition: opacity 0.25s ease;
-  transition-delay: 0.9s;
+  transition-delay: 2.4s;
 }
 .bar-chart__trend.in-view path { stroke-dashoffset: 0; }
 .bar-chart__trend.in-view polygon { opacity: 1; }
@@ -1004,6 +1012,7 @@ table { border-collapse: collapse; width: 100%; }
     top: 50%;
     transform: translate(-50%, -50%);
   }
+  .quick-inquiry__submit:hover { transform: translate(-50%, calc(-50% - 2px)); }
 }
 .quick-inquiry__toggle {
   margin-left: auto;
@@ -1097,11 +1106,16 @@ table { border-collapse: collapse; width: 100%; }
 /* 창업 프로세스: 멕시카나 창업절차 스타일 좌측 순차 슬라이드인 (일반 reveal-group의 translateY를 오버라이드).
    transition-delay는 선언하지 않아 아래 .reveal-group > *:nth-child(n) 스태거 규칙이 그대로 적용됨. */
 .process-list.reveal-group > .process-item {
-  transform: translateX(-40px);
+  transform: translateX(-90px);
   transition-property: opacity, transform;
-  transition-duration: 1s, 1s;
+  transition-duration: 1.1s, 1.1s;
   transition-timing-function: var(--ease), var(--ease);
 }
+.process-list.reveal-group > .process-item:nth-child(1) { transition-delay: 0s; }
+.process-list.reveal-group > .process-item:nth-child(2) { transition-delay: 0.3s; }
+.process-list.reveal-group > .process-item:nth-child(3) { transition-delay: 0.6s; }
+.process-list.reveal-group > .process-item:nth-child(4) { transition-delay: 0.9s; }
+.process-list.reveal-group > .process-item:nth-child(5) { transition-delay: 1.2s; }
 .process-list.reveal-group.is-visible > .process-item { transform: translateX(0); }
 
 @media (prefers-reduced-motion: reduce) {
