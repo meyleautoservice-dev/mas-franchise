@@ -244,27 +244,6 @@
   });
   } // !LIGHT_MODE
 
-  /* ---------- 유튜브 영상 클릭 시 페이지 내 바로 재생 (썸네일 → iframe 교체) ---------- */
-  var videoFrames = Array.prototype.slice.call(document.querySelectorAll(".video-item__frame[data-video-id]"));
-  videoFrames.forEach(function (frame) {
-    var playBtn = frame.querySelector(".video-item__play");
-    if (!playBtn) return;
-    playBtn.addEventListener("click", function () {
-      var videoId = frame.getAttribute("data-video-id");
-      var start = frame.getAttribute("data-video-start");
-      var title = frame.getAttribute("data-video-title") || "YouTube video player";
-      var src = "https://www.youtube.com/embed/" + videoId + "?autoplay=1&playsinline=1" + (start ? "&start=" + start : "");
-      var iframe = document.createElement("iframe");
-      iframe.src = src;
-      iframe.title = title;
-      iframe.allow = "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share";
-      iframe.referrerPolicy = "strict-origin-when-cross-origin";
-      iframe.allowFullscreen = true;
-      frame.innerHTML = "";
-      frame.appendChild(iframe);
-    });
-  });
-
   /* ---------- 창업 문의 폼 ---------- */
   var form = document.getElementById("contactForm");
   var formNote = document.getElementById("formNote");
