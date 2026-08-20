@@ -162,6 +162,12 @@
     svg.classList.toggle("in-view", isVisible);
   });
 
+  /* ---------- "상담 후 선발 방식" 밑줄 좌→우 드로잉 모션 ---------- */
+  var underlineReveals = Array.prototype.slice.call(document.querySelectorAll(".underline-reveal"));
+  watchVisibility(underlineReveals, 0.6, defaultBounds, function (el, isVisible) {
+    el.classList.toggle("in-view", isVisible);
+  });
+
   /* ---------- 하이라이트 숫자 카운트업 (마일레 소개 120개국·24,000종) ---------- */
   var countTargets = Array.prototype.slice.call(document.querySelectorAll(".hl-count"));
   watchVisibility(countTargets, 0.6, defaultBounds, function (el, isVisible) {
@@ -237,6 +243,27 @@
     }
   });
   } // !LIGHT_MODE
+
+  /* ---------- 유튜브 영상 클릭 시 페이지 내 바로 재생 (썸네일 → iframe 교체) ---------- */
+  var videoFrames = Array.prototype.slice.call(document.querySelectorAll(".video-item__frame[data-video-id]"));
+  videoFrames.forEach(function (frame) {
+    var playBtn = frame.querySelector(".video-item__play");
+    if (!playBtn) return;
+    playBtn.addEventListener("click", function () {
+      var videoId = frame.getAttribute("data-video-id");
+      var start = frame.getAttribute("data-video-start");
+      var title = frame.getAttribute("data-video-title") || "YouTube video player";
+      var src = "https://www.youtube.com/embed/" + videoId + "?autoplay=1&playsinline=1" + (start ? "&start=" + start : "");
+      var iframe = document.createElement("iframe");
+      iframe.src = src;
+      iframe.title = title;
+      iframe.allow = "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share";
+      iframe.referrerPolicy = "strict-origin-when-cross-origin";
+      iframe.allowFullscreen = true;
+      frame.innerHTML = "";
+      frame.appendChild(iframe);
+    });
+  });
 
   /* ---------- 창업 문의 폼 ---------- */
   var form = document.getElementById("contactForm");

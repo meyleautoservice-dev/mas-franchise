@@ -231,7 +231,7 @@ table { border-collapse: collapse; width: 100%; }
 .section__title--sm { font-size: clamp(49.5px, 6.75vw, 63px); }
 
 .body-lg { font-size: 27px; line-height: 1.7; color: var(--c-ink); margin-top: 18px; }
-.body { font-size: 22.5px; line-height: 1.85; color: var(--c-ink-soft); margin-top: 16px; max-width: 640px; }
+.body { font-size: 22.5px; line-height: 1.85; color: var(--c-ink-soft); margin: 16px auto 0; max-width: 640px; }
 
 /* ---------- 인라인 강조 하이라이트 ---------- */
 .hl {
@@ -760,6 +760,65 @@ table { border-collapse: collapse; width: 100%; }
 .point-item__sub { margin-top: 6px; font-size: 19.5px; font-weight: 700; color: var(--c-coral); }
 .point-item__desc { margin-top: 10px; font-size: 21px; color: var(--c-ink-soft); line-height: 1.7; max-width: 440px; }
 
+/* ---------- 전기차 정비 경쟁력 ---------- */
+#ev .feature-card { background: var(--c-blue); }
+#ev .feature-card__title { color: var(--c-turquoise); }
+#ev .feature-card__desc { color: var(--c-white); }
+
+/* 영상 쇼케이스: 소낙스 카케어 성공 스토리 영상처럼 다크 풀블리드 배경에서 바로 재생 */
+.video-showcase {
+  width: 100vw;
+  margin: 48px calc(50% - 50vw) 0;
+  background: var(--c-dark-blue);
+  padding: 56px 24px;
+  text-align: center;
+}
+.video-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 32px;
+  max-width: 1180px;
+  margin: 24px auto 0;
+}
+@media (min-width: 700px) { .video-grid { grid-template-columns: 1fr 1fr; } }
+.video-item__frame {
+  position: relative;
+  aspect-ratio: 16 / 9;
+  border-radius: 14px;
+  overflow: hidden;
+  background: #000;
+  box-shadow: 0 24px 48px rgba(0, 0, 0, 0.4);
+}
+.video-item__frame iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }
+.video-item__thumb { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+.video-item__play {
+  position: absolute;
+  inset: 0;
+  margin: auto;
+  width: 76px;
+  height: 76px;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: rgba(0, 0, 52, 0.6);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.25s var(--ease), background 0.25s var(--ease);
+}
+.video-item__play::before {
+  content: "";
+  width: 0;
+  height: 0;
+  margin-left: 6px;
+  border-style: solid;
+  border-width: 14px 0 14px 24px;
+  border-color: transparent transparent transparent var(--c-white);
+}
+.video-item__play:hover, .video-item__play:focus-visible { transform: scale(1.08); background: var(--c-coral); }
+.video-item__caption { margin-top: 14px; font-size: 18px; font-weight: 700; color: var(--c-white); text-align: center; }
+
 /* ---------- 창업 프로세스 ---------- */
 .process-list {
   display: grid;
@@ -892,6 +951,29 @@ table { border-collapse: collapse; width: 100%; }
 }
 @media (prefers-reduced-motion: reduce) {
   .promo-banner .hl--shine.hl-pulsing { animation: none; }
+}
+
+/* "상담 후 선발 방식" 강조: 볼드 + 스크롤 시 좌→우로 그려지는 밑줄 */
+.underline-reveal {
+  position: relative;
+  display: inline-block;
+  font-weight: 900;
+}
+.underline-reveal::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: -4px;
+  width: 100%;
+  height: 3px;
+  background: var(--c-coral);
+  transform: scaleX(0);
+  transform-origin: left center;
+  transition: transform 0.8s var(--ease);
+}
+.underline-reveal.in-view::after { transform: scaleX(1); }
+@media (prefers-reduced-motion: reduce) {
+  .underline-reveal::after { transition: none; }
 }
 
 /* ---------- 창업 문의 ---------- */
