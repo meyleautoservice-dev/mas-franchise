@@ -59,6 +59,8 @@ function Get-ImageProfile {
     if ($FileName -match "logo-.*horizontal") { return @{ MaxEdge = 320; Transparent = $true } }
     if ($FileName -match "symbol-|logo-") { return @{ MaxEdge = 220; Transparent = $true } }
     if ($FileName -match "^rolling-") { return @{ MaxEdge = 700; Transparent = $false } }
+    # 어두운 그라디언트 풀블리드 배너라 기본 프로필로 재압축하면 블록 노이즈가 두드러짐
+    if ($FileName -eq "ev-hero-charging.jpg") { return @{ MaxEdge = 1600; Transparent = $false } }
     return @{ MaxEdge = 900; Transparent = $false }
 }
 
@@ -136,22 +138,38 @@ $css = $css + $rollingCss
 # 그래서 매치를 먼저 모아 고유 경로만 순회하며 일반 문자열 치환으로 처리한다.)
 $totalOrig = 0
 $totalNew = 0
+$heroDataUri = $null
 $imgRegex = [regex]'src="(assets/img/[^"]+)"'
 $uniquePaths = $imgRegex.Matches($html) | ForEach-Object { $_.Groups[1].Value } | Select-Object -Unique
 foreach ($relPath in $uniquePaths) {
     $absPath = Join-Path $Root $relPath
     $origLen = (Get-Item $absPath).Length
     $profile = Get-ImageProfile ([System.IO.Path]::GetFileName($relPath))
-    $q = if ($relPath -match "rolling-") { 55 } else { 62 }
+    $q = if ($relPath -match "rolling-") { 55 } elseif ([System.IO.Path]::GetFileName($relPath) -eq "ev-hero-charging.jpg") { 78 } else { 62 }
     $result = Get-ResizedBytes -Path $absPath -MaxEdge $profile.MaxEdge -Transparent $profile.Transparent -JpegQuality $q
     $b64 = [Convert]::ToBase64String($result.Bytes)
     $totalOrig += $origLen
     $totalNew += $result.Bytes.Length
-    $html = $html.Replace('src="' + $relPath + '"', 'src="data:' + $result.Mime + ';base64,' + $b64 + '"')
+    $dataUri = 'data:' + $result.Mime + ';base64,' + $b64
+    $html = $html.Replace('src="' + $relPath + '"', 'src="' + $dataUri + '"')
+    if ([System.IO.Path]::GetFileName($relPath) -eq "ev-hero-charging.jpg") { $heroDataUri = $dataUri }
     Write-Host ("{0,-45} {1,8:N0} KB -> {2,8:N0} KB" -f $relPath, ($origLen/1KB), ($result.Bytes.Length/1KB))
 }
 
-$html = $html -replace '<link rel="stylesheet" href="assets/css/styles\.css">', ("<style>`n" + $css + "`n</style>")
+# CSS의 mask-image: url("../img/ev-hero-charging-mask.png")는 어떤 <img>에도 안 쓰이고
+# CSS에서만 참조되는 별도 파일이라 위 인라인 루프가 건드리지 않는다 — 그대로 두면
+# 번들 단일 HTML에서 마스크가 비어버려(= 빛 효과 안 보임) 로컬 프리뷰와 다르게 보인다.
+$maskPath = Join-Path $Root "assets/img/ev-hero-charging-mask.png"
+if (Test-Path $maskPath) {
+    $maskOrigLen = (Get-Item $maskPath).Length
+    $maskResult = Get-ResizedBytes -Path $maskPath -MaxEdge 1600 -Transparent $true -JpegQuality 100
+    $maskB64 = [Convert]::ToBase64String($maskResult.Bytes)
+    $maskDataUri = 'data:' + $maskResult.Mime + ';base64,' + $maskB64
+    $css = $css.Replace('url("../img/ev-hero-charging-mask.png")', 'url("' + $maskDataUri + '")')
+    Write-Host ("{0,-45} {1,8:N0} KB -> {2,8:N0} KB" -f "assets/img/ev-hero-charging-mask.png", ($maskOrigLen/1KB), ($maskResult.Bytes.Length/1KB))
+}
+
+$html = $html -replace '<link rel="stylesheet" href="assets/css/styles\.css(\?[^"]*)?">', ("<style>`n" + $css + "`n</style>")
 $html = $html -replace '<script src="assets/js/main\.js"></script>', ("<script>`n" + $js + "`n</script>")
 
 [System.IO.File]::WriteAllText($OutPath, $html, $utf8NoBom)

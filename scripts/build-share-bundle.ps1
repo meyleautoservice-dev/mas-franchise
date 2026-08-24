@@ -54,6 +54,10 @@ function Get-ImageProfile {
     if ($FileName -match "logo-.*horizontal") { return @{ MaxEdge = 360; Transparent = $true } }
     if ($FileName -match "symbol-|logo-") { return @{ MaxEdge = 260; Transparent = $true } }
     if ($FileName -match "^rolling-") { return @{ MaxEdge = 950; Transparent = $false } }
+    # 100vw 풀블리드 히어로 배너 + luminance 마스크 소스로도 재사용되는 이미지 — 기본
+    # 프로필(1100px/quality 70)로 재압축하면 어두운 그라디언트 배경에 블록 노이즈가
+    # 두드러져 "깨져 보인다"는 피드백을 받았다. 더 높은 해상도/품질로 예외 처리.
+    if ($FileName -eq "ev-hero-charging.jpg") { return @{ MaxEdge = 2400; Transparent = $false } }
     return @{ MaxEdge = 1100; Transparent = $false }
 }
 
@@ -118,22 +122,41 @@ $css = $css + $rollingCss
 # instead of relying on that conversion.)
 $totalOrig = 0
 $totalNew = 0
+$heroDataUri = $null
 $imgRegex = [regex]'src="(assets/img/[^"]+)"'
 $uniquePaths = $imgRegex.Matches($html) | ForEach-Object { $_.Groups[1].Value } | Select-Object -Unique
 foreach ($relPath in $uniquePaths) {
     $absPath = Join-Path $Root $relPath
     $origLen = (Get-Item $absPath).Length
     $profile = Get-ImageProfile ([System.IO.Path]::GetFileName($relPath))
-    $q = if ($relPath -match "rolling-") { 62 } else { 70 }
+    $q = if ($relPath -match "rolling-") { 62 } elseif ([System.IO.Path]::GetFileName($relPath) -eq "ev-hero-charging.jpg") { 85 } else { 70 }
     $result = Get-ResizedBytes -Path $absPath -MaxEdge $profile.MaxEdge -Transparent $profile.Transparent -JpegQuality $q
     $b64 = [Convert]::ToBase64String($result.Bytes)
     $totalOrig += $origLen
     $totalNew += $result.Bytes.Length
-    $html = $html.Replace('src="' + $relPath + '"', 'src="data:' + $result.Mime + ';base64,' + $b64 + '"')
+    $dataUri = 'data:' + $result.Mime + ';base64,' + $b64
+    $html = $html.Replace('src="' + $relPath + '"', 'src="' + $dataUri + '"')
+    if ([System.IO.Path]::GetFileName($relPath) -eq "ev-hero-charging.jpg") { $heroDataUri = $dataUri }
     Write-Host ("{0,-45} {1,8:N0} KB -> {2,8:N0} KB" -f $relPath, ($origLen/1KB), ($result.Bytes.Length/1KB))
 }
 
-$html = $html -replace '<link rel="stylesheet" href="assets/css/styles\.css">', ("<style>`n" + $css + "`n</style>")
+# CSS의 mask-image: url("../img/ev-hero-charging-mask.png")는 위 <img src="...">
+# 인라인 루프가 건드리지 않는 상대경로라(이 파일은 어떤 <img> 태그에도 안 쓰이고
+# CSS에서만 참조됨), 번들 단일 HTML에서는 파일을 찾지 못해 마스크가 통째로 비어버려
+# (= 빛 효과가 안 보임) 로컬 프리뷰와 다르게 보이는 원인이었다. 별도로 직접 읽어 인라인.
+# object-fit/mask-size 모두 cover+center라 히어로 이미지와 화소수가 달라도(둘 다 같은
+# 원본에서 뽑은 동일 비율이라) 어긋나지 않으므로, 번들 용량을 위해 같은 해상도로 축소.
+$maskPath = Join-Path $Root "assets/img/ev-hero-charging-mask.png"
+if (Test-Path $maskPath) {
+    $maskOrigLen = (Get-Item $maskPath).Length
+    $maskResult = Get-ResizedBytes -Path $maskPath -MaxEdge 2400 -Transparent $true -JpegQuality 100
+    $maskB64 = [Convert]::ToBase64String($maskResult.Bytes)
+    $maskDataUri = 'data:' + $maskResult.Mime + ';base64,' + $maskB64
+    $css = $css.Replace('url("../img/ev-hero-charging-mask.png")', 'url("' + $maskDataUri + '")')
+    Write-Host ("{0,-45} {1,8:N0} KB -> {2,8:N0} KB" -f "assets/img/ev-hero-charging-mask.png", ($maskOrigLen/1KB), ($maskResult.Bytes.Length/1KB))
+}
+
+$html = $html -replace '<link rel="stylesheet" href="assets/css/styles\.css(\?[^"]*)?">', ("<style>`n" + $css + "`n</style>")
 $html = $html -replace '<script src="assets/js/main\.js"></script>', ("<script>`n" + $js + "`n</script>")
 
 [System.IO.File]::WriteAllText($OutPath, $html, $utf8NoBom)

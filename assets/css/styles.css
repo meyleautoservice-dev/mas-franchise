@@ -765,18 +765,44 @@ table { border-collapse: collapse; width: 100%; }
 #ev .feature-card__title { color: var(--c-turquoise); }
 #ev .feature-card__desc { color: var(--c-white); }
 
-/* 상단 히어로: 카탈로그 표지의 충전 중인 EV 라인아트를 뷰포트 전체 폭 배경으로 채운다.
-   #ev는 .section의 96px 상단 패딩을 상쇄(-96px)해 이미지 위 흰 여백을 없애고,
-   이미지 아래쪽에는 margin-bottom으로 흰 여백을 넉넉히 둔다. 자동차는 120%로 확대해
-   더 꽉 차게 보여주고, 전류가 흐르는 하이라이트 스윕은 원본 이미지의 밝기를 마스크로
-   사용해(mask-image + mask-mode:luminance) 배경의 어두운 부분은 가려지고 자동차·충전 라인
-   같은 밝은 부분에만 겹쳐 보이도록 한다. */
+/* 카드 순서: 01 고내구성 HD 컨트롤암 / 02 쇼크 업소버 세트(신규) / 03 테슬라 전용 필터 부품
+   (구 01번, 오일교환키트 삭제로 자리 이동) / 04 정비사 교육.
+   카드 03(필터): 제품 사진이 프레임을 너무 꽉 채워(object-fit:cover 특성상) 확대되어 보인다는
+   피드백으로 10% 축소 — 남는 여백은 흰색으로 채운다(.feature-card__media의 기본 배경은
+   --c-light-grey 회색이라 축소 후 남는 테두리가 회색으로 보였다는 피드백으로 흰색을 덮어씀).
+   추가로 이미지 하단과 텍스트 박스 사이에 여백(경계선)이 남지 않도록 transform-origin을
+   하단 기준으로 두어, 축소된 여백이 위쪽에만 남고 아래쪽은 밀착되게 함.
+   카드 01(HD 컨트롤암, 구 02번): 컷아웃 제품이 프레임 중앙보다 살짝 왼쪽/위로 치우쳐 보인다는
+   피드백으로 우측·하단 방향으로 소폭 이동한 값을 그대로 유지. */
+#ev .feature-grid .feature-card:nth-of-type(3) .feature-card__media {
+  background: var(--c-white);
+}
+#ev .feature-grid .feature-card:nth-of-type(3) .feature-card__media img {
+  transform: scale(0.9);
+  transform-origin: center bottom;
+}
+#ev .feature-grid .feature-card:nth-of-type(1) .feature-card__media img {
+  transform: translate(14px, 12px);
+}
+
+/* 상단 히어로: 배너 전용으로 새로 제작된 EV 충전 라인아트(EV_상단이미지.psd → 1563x384,
+   .ev-hero의 실제 높이 384px와 딱 맞게 디자인된 원본이라 object-fit:cover만으로도 대부분의
+   화면 폭에서 거의 크롭 없이 꽉 차게 채워진다 — 이전 버전(1800x1139, 옆에 사선 도형이 있던
+   구도)처럼 좌우 레터박스를 따로 채워 넣을 필요가 없어졌다.
+   전류가 흐르는 하이라이트 스윕은 원본 이미지의 밝기를 마스크로 사용해(mask-image +
+   mask-mode:luminance) 배경의 어두운 부분은 가려지고 자동차·충전 라인 같은 밝은 부분에만
+   부드럽게 겹쳐 보이도록 한다(mask-size는 반드시 img의 object-fit과 동일하게 맞출 것). */
 .ev-hero {
   position: relative;
   width: 100vw;
-  height: 320px;
+  height: 384px;
   margin: -96px calc(50% - 50vw) 88px;
   overflow: hidden;
+  background: #020414;
+}
+/* 화면이 좁아지면 배너 높이도 70%로 축소(384px -> 269px) */
+@media (max-width: 768px) {
+  .ev-hero { height: 269px; }
 }
 .ev-hero__img {
   display: block;
@@ -786,36 +812,78 @@ table { border-collapse: collapse; width: 100%; }
   height: 100%;
   object-fit: cover;
   object-position: center;
-  transform: scale(1.2);
 }
 .ev-hero__pulse {
+  /* 배너 전체를 가로지르는 diagonal shine으로 "빛이 너무 넓다/화면 전체를 가린다"는
+     피드백을 받아, 다시 자동차·충전 라인에만 빛이 보이도록 마스크를 되살렸다. 단, 마스크가
+     걸린 요소 자체를 transform으로 움직이면 마스크(사진 정렬 기준)도 같이 밀려서 실제
+     사진과 어긋나 버리므로, 마스크는 고정된 이 요소(.ev-hero__pulse)에 걸어두고, 실제로
+     움직이는 빛줄기는 ::before 가상요소로 분리해 그 안에서만 translateX 애니메이션한다
+     — 마스크는 항상 사진과 정확히 겹친 채 고정, 빛줄기만 GPU 합성으로 매끄럽게 흐른다.
+     모바일(iOS Safari)에서는 mask-mode:luminance가 JPEG 소스에 제대로 적용되지 않고
+     알파채널(JPEG는 항상 불투명이라 전부 1) 기준으로 대체 판정되어 마스크가 아예 안 걸린
+     것처럼(스윕이 화면 전체를 뒤덮음) 렌더링되는 문제가 있었다. 그래서 원본 사진 대신,
+     밝기(luminance) 값을 미리 계산해 알파채널에 직접 구워넣은 전용 마스크 PNG
+     (ev-hero-charging-mask.png, RGB=흰색 고정 + A=밝기)를 쓰고 mode도 alpha로 명시해,
+     luminance 지원 여부와 무관하게 모든 브라우저가 알파채널만 보고 동일하게 클리핑하도록
+     통일했다. */
   position: absolute;
   inset: 0;
-  background: linear-gradient(100deg,
-    transparent 30%,
-    rgba(1, 245, 191, 0.85) 44%,
-    rgba(255, 255, 255, 1) 50%,
-    rgba(1, 245, 191, 0.85) 56%,
-    transparent 70%);
-  background-size: 220% 100%;
-  background-position: -60% 0;
-  mix-blend-mode: plus-lighter;
-  animation: ev-current-flow 2.6s linear infinite;
-  transform: scale(1.2);
-  -webkit-mask-image: url("../img/ev-hero-charging.jpg");
-  -webkit-mask-mode: luminance;
+  overflow: hidden;
+  -webkit-mask-image: url("../img/ev-hero-charging-mask.png");
+  -webkit-mask-mode: alpha;
   -webkit-mask-size: cover;
   -webkit-mask-position: center;
   -webkit-mask-repeat: no-repeat;
-  mask-image: url("../img/ev-hero-charging.jpg");
-  mask-mode: luminance;
+  mask-image: url("../img/ev-hero-charging-mask.png");
+  mask-mode: alpha;
   mask-size: cover;
   mask-position: center;
   mask-repeat: no-repeat;
 }
+.ev-hero__pulse::before {
+  /* 마스크로 얇은 라인 안에만 클리핑되면 색만 살짝 바뀌는 정도로는 실제 배너 크기에서
+     거의 안 보인다(과거 라운드에서 겪은 것과 동일한 함정) — filter로 부드러운 글로우를
+     씌워 라인 밖으로 살짝 번지게 해야 눈에 띄는 "빛" 느낌이 난다. 마스크는 부모
+     (.ev-hero__pulse)에 걸려 있어 블러로 번진 부분도 결국 마스크 경계 안에서만 보인다.
+     새 히어로 아트(EV_상단이미지.psd)는 자동차 라인 자체가 이미 밝은 백색/청록 네온
+     글로우를 내장하고 있어, 순백색만으로 덧칠하면 "흰 위에 흰"이 되어 안 보인다 —
+     그래서 흰색 피크 양옆에 브랜드 청록(--c-turquoise)을 섞어 색상 변화 자체로도
+     스윕이 느껴지게 하고, blur/brightness를 크게 올려 확실한 밝기 차이를 만든다.
+     "전기 충전되는 느낌"으로 바꿔달라는 요청 — ① 충전기가 이미지 오른쪽, 차가 왼쪽에
+     있으므로 전류가 충전기 -> 차 방향(우->좌)으로 흐르게 진행 방향을 반전하고,
+     ② 일정한 속도로 미끄러지는 대신 ev-spark-flicker로 밝기를 순간순간 깜빡이게 해
+     전류가 스파크처럼 튀며 흐르는 느낌을 더했다(두 애니메이션을 같은 요소에 동시 적용). */
+  content: "";
+  position: absolute;
+  inset: -20px;
+  background: linear-gradient(100deg,
+    transparent 32%,
+    rgba(1, 245, 191, 0.9) 44%,
+    rgba(255, 255, 255, 1) 50%,
+    rgba(1, 245, 191, 0.9) 56%,
+    transparent 68%);
+  filter: blur(11px) brightness(2.4) saturate(1.6);
+  transform: translateX(140%);
+  will-change: transform, opacity;
+  animation: ev-current-flow 2.6s linear infinite, ev-spark-flicker 2.6s linear infinite;
+}
 @keyframes ev-current-flow {
-  from { background-position: -60% 0; }
-  to { background-position: 160% 0; }
+  from { transform: translateX(140%); }
+  to { transform: translateX(-140%); }
+}
+@keyframes ev-spark-flicker {
+  0%, 100% { opacity: 1; }
+  3% { opacity: 0.5; }
+  6% { opacity: 1; }
+  9% { opacity: 0.4; }
+  12% { opacity: 1; }
+  45% { opacity: 1; }
+  48% { opacity: 0.55; }
+  51% { opacity: 1; }
+  74% { opacity: 1; }
+  77% { opacity: 0.45; }
+  80% { opacity: 1; }
 }
 @media (prefers-reduced-motion: reduce) {
   .ev-hero__pulse { animation: none; opacity: 0; }
