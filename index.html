@@ -649,7 +649,8 @@
         </ul>
       </div>
 
-      <form class="contact-form" id="contactForm" novalidate>
+      <form class="contact-form" id="contactForm" name="franchise-contact" method="POST" data-netlify="true" novalidate>
+        <input type="hidden" name="form-name" value="franchise-contact">
         <p class="contact-form__title">가맹 상담 신청</p>
 
         <div class="contact-form__grid">
@@ -749,7 +750,8 @@
 </footer>
 
 <div class="quick-inquiry" id="quickInquiry">
-  <form class="quick-inquiry__panel" id="quickInquiryForm" novalidate>
+  <form class="quick-inquiry__panel" id="quickInquiryForm" name="franchise-quick-inquiry" method="POST" data-netlify="true" novalidate>
+    <input type="hidden" name="form-name" value="franchise-quick-inquiry">
     <div class="quick-inquiry__grid">
       <div class="form-row">
         <label for="qi-name">성함 <span aria-hidden="true">*</span></label>

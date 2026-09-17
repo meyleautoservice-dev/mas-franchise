@@ -244,6 +244,23 @@
   });
   } // !LIGHT_MODE
 
+  /* ---------- Netlify Forms 제출 헬퍼 ---------- */
+  function encodeFormData(data) {
+    return Object.keys(data)
+      .map(function (key) {
+        return encodeURIComponent(key) + "=" + encodeURIComponent(data[key]);
+      })
+      .join("&");
+  }
+
+  function submitNetlifyForm(formName, fields) {
+    return fetch("/", {
+      method: "POST",
+      headers: { "Content-Type": "application/x-www-form-urlencoded" },
+      body: encodeFormData(Object.assign({ "form-name": formName }, fields))
+    });
+  }
+
   /* ---------- 창업 문의 폼 ---------- */
   var form = document.getElementById("contactForm");
   var formNote = document.getElementById("formNote");
@@ -271,29 +288,27 @@
         return;
       }
 
-      // TODO: 임시로 mailto 폴백을 사용 중입니다. 폼 수신 백엔드(서버/폼 전송
-      // 서비스)가 마련되면 mailto 대신 fetch()로 전송하도록 바꿀 것.
-      var RECEIVER_EMAIL = "cs@allesauto.co.kr";
       var message = form.message.value.trim() || "(내용 없음)";
-      var bodyLines = [
-        "성함: " + name,
-        "연령: " + (form.age.value || "미입력"),
-        "연락처: " + phone,
-        "이메일주소: " + email,
-        "희망 지역: " + (form.region.value.trim() || "미입력"),
-        "희망시기: " + (form.timing.value || "미입력"),
-        "현재 정비소 운영 여부: " + (form.operating.value || "미입력"),
-        "수입차 정비 경력 유무: " + (form.experience.value || "미입력"),
-        "문의 내용: " + message
-      ];
-      var mailto =
-        "mailto:" + RECEIVER_EMAIL +
-        "?subject=" + encodeURIComponent("[마일레 오토 서비스] 가맹 상담 신청 - " + name) +
-        "&body=" + encodeURIComponent(bodyLines.join("\n"));
 
-      window.location.href = mailto;
-      formNote.textContent = "메일 앱이 열립니다. 전송 후 상담원이 확인하고 연락드립니다.";
-      formNote.classList.add("is-success");
+      submitNetlifyForm("franchise-contact", {
+        name: name,
+        age: form.age.value || "미입력",
+        phone: phone,
+        email: email,
+        region: form.region.value.trim() || "미입력",
+        timing: form.timing.value || "미입력",
+        operating: form.operating.value || "미입력",
+        experience: form.experience.value || "미입력",
+        message: message
+      }).then(function (response) {
+        if (!response.ok) throw new Error("submit failed: " + response.status);
+        formNote.textContent = "문의가 정상적으로 접수되었습니다. 상담원이 확인 후 연락드립니다.";
+        formNote.classList.add("is-success");
+        form.reset();
+      }).catch(function () {
+        formNote.textContent = "전송 중 오류가 발생했습니다. 잠시 후 다시 시도하거나 031-8017-9521로 전화 주세요.";
+        formNote.classList.add("is-error");
+      });
     });
   }
 
@@ -352,25 +367,24 @@
         return;
       }
 
-      var RECEIVER_EMAIL = "cs@allesauto.co.kr";
-      var bodyLines = [
-        "성함: " + name,
-        "연령: " + (quickForm.age.value || "미입력"),
-        "연락처: " + phone,
-        "이메일주소: " + email,
-        "희망지역: " + (quickForm.region.value.trim() || "미입력"),
-        "희망시기: " + (quickForm.timing.value || "미입력"),
-        "현재 정비소 운영 여부: " + (quickForm.operating.value || "미입력"),
-        "수입차 정비 경력 유무: " + (quickForm.experience.value || "미입력")
-      ];
-      var mailto =
-        "mailto:" + RECEIVER_EMAIL +
-        "?subject=" + encodeURIComponent("[마일레 오토 서비스] 빠른 창업 문의 - " + name) +
-        "&body=" + encodeURIComponent(bodyLines.join("\n"));
-
-      window.location.href = mailto;
-      quickNote.textContent = "메일 앱이 열립니다. 전송 후 상담원이 확인하고 연락드립니다.";
-      quickNote.classList.add("is-success");
+      submitNetlifyForm("franchise-quick-inquiry", {
+        name: name,
+        age: quickForm.age.value || "미입력",
+        phone: phone,
+        email: email,
+        region: quickForm.region.value.trim() || "미입력",
+        timing: quickForm.timing.value || "미입력",
+        operating: quickForm.operating.value || "미입력",
+        experience: quickForm.experience.value || "미입력"
+      }).then(function (response) {
+        if (!response.ok) throw new Error("submit failed: " + response.status);
+        quickNote.textContent = "문의가 정상적으로 접수되었습니다. 상담원이 확인 후 연락드립니다.";
+        quickNote.classList.add("is-success");
+        quickForm.reset();
+      }).catch(function () {
+        quickNote.textContent = "전송 중 오류가 발생했습니다. 잠시 후 다시 시도하거나 031-8017-9521로 전화 주세요.";
+        quickNote.classList.add("is-error");
+      });
     });
   }
 
