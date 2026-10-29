@@ -531,7 +531,8 @@ table { border-collapse: collapse; width: 100%; }
   color: var(--c-white);
 }
 .bar-chart__labels { display: flex; gap: 24px; padding: 10px 16px 0 2px; }
-.bar-chart__labels span { flex: 1; max-width: 80px; margin: 0 auto; text-align: center; font-size: 17px; color: rgba(255, 255, 255, 0.6); font-weight: 600; }
+.bar-chart__labels span { flex: 1; max-width: 80px; margin: 0 auto; text-align: center; font-size: 17px; color: rgba(255, 255, 255, 0.6); font-weight: 600; white-space: nowrap; }
+.bar-chart__source { margin: 10px 16px 0 2px; font-size: 13px; color: rgba(255, 255, 255, 0.45); text-align: right; }
 
 /* 제목을 한 줄로 유지하며 화면 중앙 정렬 (overflow 상태에서도 text-align:center가 아닌
    flex justify-content:center를 사용해야 대칭적으로 중앙 정렬됨).
